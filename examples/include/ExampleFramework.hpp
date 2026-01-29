@@ -62,25 +62,6 @@ public:
 };
 
 /**
- * @brief Run an example visualization
- *
- * This function encapsulates the common pattern of creating a visualization
- * and running it with a Player.
- *
- * @tparam VizType The visualization class derived from ExampleBase
- * @param config Configuration for the example
- * @param audio_frames_needed Number of audio frames needed per update
- * @return Exit code (0 for success)
- */
-template <typename VizType>
-int run_example(const ExampleConfig &config, int audio_frames_needed)
-{
-	VizType viz{config};
-	avz::Player{viz, viz.media, config.framerate, audio_frames_needed}.start_in_window(config.window_title);
-	return EXIT_SUCCESS;
-}
-
-/**
  * @brief Alternative main function helper that allows custom audio frame calculation
  */
 #define LIBAVZ_EXAMPLE_MAIN_CUSTOM(VizClass, description, default_audio_duration, audio_frames_expr)              \
