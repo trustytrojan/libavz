@@ -17,7 +17,7 @@ namespace avz::examples
 
 struct Args : argparse::ArgumentParser
 {
-	Args(int argc, const char *const *argv, float default_audio_duration = 0.25f);
+	Args(int argc, const char *const *argv, float default_audio_duration = 0.25f, bool auto_parse = true);
 
 	inline constexpr void parse(int argc, const char *const *argv)
 	{

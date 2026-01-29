@@ -3,7 +3,7 @@
 namespace avz::examples
 {
 
-Args::Args(const int argc, const char *const *const argv, const float default_audio_duration)
+Args::Args(const int argc, const char *const *const argv, const float default_audio_duration, const bool auto_parse)
 {
 	// clang-format off
 	// Required positional argument: media file
@@ -45,15 +45,8 @@ Args::Args(const int argc, const char *const *const argv, const float default_au
 		.flag();
 	// clang-format on
 
-	try
-	{
-		parse_args(argc, argv);
-	}
-	catch (const std::exception &err)
-	{
-		std::cerr << err.what() << '\n';
-		std::exit(EXIT_FAILURE);
-	}
+	if (auto_parse)
+		parse(argc, argv);
 }
 
 ExampleBase::ExampleBase(const Args &args)

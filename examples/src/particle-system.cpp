@@ -4,6 +4,57 @@
 
 using namespace avz::examples;
 
+struct ParticleSystemExampleArgs : avz::examples::Args
+{
+	ParticleSystemExampleArgs(int argc, const char *const *argv, float default_audio_duration = 0.25f)
+		: Args{argc, argv, default_audio_duration, false}
+	{
+		// clang-format off
+		add_argument("--particle-count")
+			.help("Number of particles")
+			.default_value(50u)
+			.scan<'u', unsigned>();
+
+		add_argument("--point-count")
+			.help("Number of points per particle circle")
+			.default_value(10u)
+			.scan<'u', unsigned>();
+
+		add_argument("--radius-min")
+			.help("Minimum particle radius")
+			.default_value(1.f)
+			.scan<'f', float>();
+
+		add_argument("--radius-max")
+			.help("Maximum particle radius")
+			.default_value(5.f)
+			.scan<'f', float>();
+
+		add_argument("--velocity-x-min")
+			.help("Minimum X velocity")
+			.default_value(-1.f)
+			.scan<'f', float>();
+
+		add_argument("--velocity-x-max")
+			.help("Maximum X velocity")
+			.default_value(1.f)
+			.scan<'f', float>();
+
+		add_argument("--velocity-y-min")
+			.help("Minimum Y velocity")
+			.default_value(-1.f)
+			.scan<'f', float>();
+
+		add_argument("--velocity-y-max")
+			.help("Maximum Y velocity")
+			.default_value(0.f)
+			.scan<'f', float>();
+		// clang-format on
+
+		parse(argc, argv);
+	}
+};
+
 struct ParticleSystemExample : ExampleBase
 {
 	const int fft_size;
@@ -18,12 +69,16 @@ struct ParticleSystemExample : ExampleBase
 	avz::FrequencyAnalyzer fa;
 	avz::AudioAnalyzer aa;
 
-	ParticleSystemExample(const Args &args)
+	ParticleSystemExample(const ParticleSystemExampleArgs &args)
 		: ExampleBase{args},
 		  fft_size{static_cast<int>(args.get_audio_duration_sec() * sample_rate_hz)},
-		  ps{{{}, (sf::Vector2i)size}, 50, (int)args.get_framerate()},
+		  ps{{{}, (sf::Vector2i)size}, args.get<unsigned>("--particle-count"), (int)args.get_framerate()},
 		  fa{fft_size}
 	{
+		ps.set_particle_point_count(args.get<unsigned>("--point-count"));
+		ps.set_particle_radius_range(args.get<float>("--radius-min"), args.get<float>("--radius-max"));
+		ps.set_particle_velocity_x_range(args.get<float>("--velocity-x-min"), args.get<float>("--velocity-x-max"));
+		ps.set_particle_velocity_y_range(args.get<float>("--velocity-y-min"), args.get<float>("--velocity-y-max"));
 		emplace_layer<avz::Layer>("particles").add_draw({ps});
 	}
 
@@ -61,5 +116,11 @@ struct ParticleSystemExample : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	ParticleSystemExample, "Particle system with bass frequencies boosting particles", 0.25f, viz.fft_size)
+int main(int argc, const char *const *argv)
+{
+	ParticleSystemExampleArgs args{argc, argv, 0.25f};
+	ParticleSystemExample viz{args};
+	int audio_frames = viz.fft_size;
+	avz::Player{viz, viz.media, (int)args.get_framerate(), audio_frames}.start_in_window("ParticleSystemExample");
+	return EXIT_SUCCESS;
+}
