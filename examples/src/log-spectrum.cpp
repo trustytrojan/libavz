@@ -12,7 +12,7 @@ struct LogSpectrum : ExampleBase
 	std::vector<float> a, s;
 
 	avz::ColorSettings color;
-	avz::SpectrumDrawable spectrum;
+	avz::SpectrumDrawable spectrum, s2;
 	avz::FrequencyAnalyzer fa;
 	avz::AudioAnalyzer aa;
 
@@ -24,7 +24,9 @@ struct LogSpectrum : ExampleBase
 
 	LogSpectrum(const ExampleConfig &config)
 		: ExampleBase{config},
+		  fft_size{config.audio_duration_sec * sample_rate_hz},
 		  spectrum{{{}, (sf::Vector2i)size}, color},
+		  s2{{{}, (sf::Vector2i)size}, color},
 		  fa{fft_size}
 	{
 		spectrum.set_bar_width(1);
@@ -32,8 +34,11 @@ struct LogSpectrum : ExampleBase
 		spectrum.set_multiplier(4);
 		emplace_layer<avz::Layer>("spectrum").add_draw({spectrum});
 
-		fft_size = 2 * spectrum.get_bar_count();
-		fa.set_fft_size(fft_size);
+		s2.set_bar_width(1);
+		s2.set_bar_spacing(0);
+		s2.set_multiplier(4);
+		s2.set_use_gs(true);
+		emplace_layer<avz::Layer>("spectrum_gs").add_draw({s2});
 
 		// logarithmically scale bin indices (frequencies)
 		bp.set_scale(avz::BinPacker::Scale::LOG);
@@ -66,6 +71,8 @@ struct LogSpectrum : ExampleBase
 
 		// finally, pass the data to SpectrumDrawable to draw to the screen!
 		capture_time("spectrum_update", spectrum.update(s));
+
+		capture_time("spectrum_gs_update", s2.update(s));
 	}
 };
 

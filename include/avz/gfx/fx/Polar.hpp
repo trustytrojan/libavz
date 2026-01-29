@@ -1,5 +1,6 @@
 #pragma once
 
+#include "avz/gfx/SpectrumDrawable.hpp"
 #include <SFML/Graphics.hpp>
 #include <avz/gfx/fx/TransformEffect.hpp>
 
@@ -24,11 +25,12 @@ struct Polar : TransformEffect
 	virtual const sf::Shader &getShader() const override;
 	virtual void setShaderUniforms() const override;
 
-	inline void set_gs_spectrum_bars(bool enabled, float width, float bottom)
+	inline void set_gs_spectrum_bars(const SpectrumDrawable *const spectrum = {})
 	{
-		use_gs_spectrum_bars = enabled;
-		spectrum_bar_width = width;
-		spectrum_bottom_y = bottom;
+		use_gs_spectrum_bars = spectrum;
+		spectrum_bar_width = spectrum->get_bar_width();
+		const auto rect = spectrum->get_rect();
+		spectrum_bottom_y = rect.position.y + rect.size.y;
 	}
 };
 
