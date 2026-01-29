@@ -2,28 +2,24 @@
 #include <avz/gfx/SpectrumDrawable.hpp>
 #include <cassert>
 #include <shader_headers/spectrum_bars.geom.h>
-#include <shader_headers/spectrum_lines.geom.h>
 
-namespace avz
+static sf::Shader gs_shader;
+static void init_gs_shader()
 {
-
-static sf::Shader gs_shader, gs_lines_shader;
-static void init_gs_shaders()
-{
-	if (gs_shader.getNativeHandle() && gs_lines_shader.getNativeHandle())
+	if (gs_shader.getNativeHandle())
 		return;
 
 	// Pass-through vertex shader to satisfy the linker
-	static const std::string vs_src =
-		"#version 120\nvoid main() { gl_Position = gl_Vertex; gl_FrontColor = gl_Color; }";
-	static const std::string fs_src = "#version 120\nvoid main() { gl_FragColor = gl_Color; }";
+	static constexpr std::string_view
+		vs_src = "#version 120\nvoid main() { gl_Position = gl_Vertex; gl_FrontColor = gl_Color; }",
+		fs_src = "#version 120\nvoid main() { gl_FragColor = gl_Color; }";
 
-	if (!gs_shader.loadFromMemory(vs_src, std::string{libavz_shader_spectrum_bars_geom}, fs_src))
+	if (!gs_shader.loadFromMemory(vs_src, libavz_shader_spectrum_bars_geom, fs_src))
 		throw std::runtime_error("failed to load spectrum_bars GS shader");
-
-	if (!gs_lines_shader.loadFromMemory(vs_src, std::string{libavz_shader_spectrum_lines_geom}, fs_src))
-		throw std::runtime_error("failed to load spectrum_lines GS shader");
 }
+
+namespace avz
+{
 
 SpectrumDrawable::SpectrumDrawable(const ColorSettings &color, const bool backwards)
 	: color{color},
@@ -132,12 +128,12 @@ void SpectrumDrawable::draw(sf::RenderTarget &target, sf::RenderStates states) c
 	{
 		if (!states.shader)
 		{
-			init_gs_shaders();
-			sf::Shader &s = (bar.width == 1) ? gs_lines_shader : gs_shader;
-			if (bar.width > 1)
-				s.setUniform("bar_width", (float)bar.width);
-			s.setUniform("bottom_y", (float)(rect.position.y + rect.size.y));
-			states.shader = &s;
+			// ONLY IF there isn't another shader being applied (for example Polar in spectrum mode)
+			// THEN we can insert our GS to generate the bars
+			init_gs_shader();
+			gs_shader.setUniform("bar_width", (float)bar.width);
+			gs_shader.setUniform("bottom_y", (float)(rect.position.y + rect.size.y));
+			states.shader = &gs_shader;
 		}
 	}
 
