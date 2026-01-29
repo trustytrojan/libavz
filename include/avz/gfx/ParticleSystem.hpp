@@ -27,6 +27,15 @@ private:
 	bool fade_out{true};
 	bool start_offscreen{true};
 
+	// Particle configuration
+	unsigned int particle_point_count{10};
+	float particle_radius_min{1.f};
+	float particle_radius_max{5.f};
+	float particle_velocity_x_min{-1.f};
+	float particle_velocity_x_max{1.f};
+	float particle_velocity_y_min{-1.f};
+	float particle_velocity_y_max{0.f};
+
 public:
 	inline ParticleSystem(const sf::IntRect &rect, const int particle_count)
 		: rect{rect},
@@ -64,6 +73,41 @@ public:
 		start_offscreen = b;
 		init_particles();
 	}
+
+	inline void set_particle_point_count(unsigned int count)
+	{
+		particle_point_count = count;
+		init_particles();
+	}
+
+	inline void set_particle_radius_range(float min, float max)
+	{
+		particle_radius_min = min;
+		particle_radius_max = max;
+		init_particles();
+	}
+
+	inline void set_particle_velocity_x_range(float min, float max)
+	{
+		particle_velocity_x_min = min;
+		particle_velocity_x_max = max;
+		init_particles();
+	}
+
+	inline void set_particle_velocity_y_range(float min, float max)
+	{
+		particle_velocity_y_min = min;
+		particle_velocity_y_max = max;
+		init_particles();
+	}
+
+	inline unsigned int get_particle_point_count() const { return particle_point_count; }
+	inline float get_particle_radius_min() const { return particle_radius_min; }
+	inline float get_particle_radius_max() const { return particle_radius_max; }
+	inline float get_particle_velocity_x_min() const { return particle_velocity_x_min; }
+	inline float get_particle_velocity_x_max() const { return particle_velocity_x_max; }
+	inline float get_particle_velocity_y_min() const { return particle_velocity_y_min; }
+	inline float get_particle_velocity_y_max() const { return particle_velocity_y_max; }
 
 	void draw(sf::RenderTarget &target, const sf::RenderStates states) const override;
 

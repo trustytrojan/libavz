@@ -96,11 +96,9 @@ void ParticleSystem::set_rect(const sf::IntRect &rect)
 
 void ParticleSystem::init_particle(Particle &p)
 {
-	// TODO: everything here should be configurable
-
 	// these are going to be very small circles, don't need many points
-	p.setPointCount(10);
-	p.setRadius(randf(1, 5));
+	p.setPointCount(particle_point_count);
+	p.setRadius(randf(particle_radius_min, particle_radius_max));
 
 	// start some particles offscreen, so the beginning sequence feels less "sudden"
 	// otherwise all of them come out at once and it looks bad
@@ -110,8 +108,8 @@ void ParticleSystem::init_particle(Particle &p)
 						: randf(rect.position.y, rect.position.y + rect.size.y),
 	});
 
-	const auto vx = randf(-1.f, 1.f);
-	const auto vy = randf(-1.f, 0.f);
+	const auto vx = randf(particle_velocity_x_min, particle_velocity_x_max);
+	const auto vy = randf(particle_velocity_y_min, particle_velocity_y_max);
 	p.setBaseVelocity({vx, vy});
 	p.applyTimescale(timestep_scale);
 }
