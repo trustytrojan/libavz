@@ -25,6 +25,7 @@ struct ExampleConfig
 	bool profiler_enabled = false;
 	std::string font_path;
 	std::string window_title;
+	bool gs_enabled{};
 };
 
 /**

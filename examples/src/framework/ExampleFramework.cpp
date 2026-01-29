@@ -48,6 +48,10 @@ ExampleConfig parse_arguments(
 	parser.add_argument("--font")
 		.help("Path to font file for profiler")
 		.default_value("");
+	
+	parser.add_argument("-gs", "--geometry-shader")
+		.help("Use geometry shader, if the example has one")
+		.flag();
 	// clang-format on
 
 	try
@@ -76,6 +80,7 @@ ExampleConfig parse_arguments(
 	config.profiler_enabled = parser.get<bool>("--profiler");
 	config.font_path = parser.get<std::string>("--font");
 	config.window_title = argv[0];
+	config.gs_enabled = parser.get<bool>("-gs");
 
 	// Validate values
 	if (config.size.x <= 0 || config.size.y <= 0)

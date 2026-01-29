@@ -4,7 +4,6 @@
 
 #include <future>
 #include <memory>
-// #include <print>
 
 #include "BassNationSpectrumLayer.hpp"
 
@@ -124,12 +123,12 @@ struct MirroredBassNation : ExampleBase
 
 			auto &spectrum = *spectrums.emplace_back(
 				std::make_unique<BassNationSpectrumLayer>(new_fft_size, sample_rate_hz, size, cs, true));
-			spectrum.spectrum.set_use_gs(true);
+			spectrum.spectrum.set_use_gs(config.gs_enabled);
 			spectrum.configure_spectrum(false, size);
 
 			// Enable GS spectrum-bar expansion on the polar effect
 			spectrum_polar.set_gs_spectrum_bars(
-				true,
+				config.gs_enabled,
 				spectrum.spectrum.get_bar_width(),
 				spectrum.spectrum.get_rect().position.y + spectrum.spectrum.get_rect().size.y);
 
