@@ -14,9 +14,9 @@ struct ShakeBassTest : ExampleBase
 	sf::RectangleShape rect;
 	avz::fx::Shake shake;
 
-	ShakeBassTest(const ExampleConfig &config)
-		: ExampleBase{config},
-		  fft_size{config.audio_duration_sec * sample_rate_hz},
+	ShakeBassTest(const Args &args)
+		: ExampleBase{args},
+		  fft_size{args.get_audio_duration_sec() * sample_rate_hz},
 		  rect{sf::Vector2f{size.x * 0.45f, size.y * 0.45f}}
 	{
 		rect.setOrigin(rect.getGeometricCenter());

@@ -15,23 +15,23 @@ struct StereoScopeViz : ExampleBase
 	std::vector<float> left_channel, right_channel;
 	const int required_frames;
 
-	StereoScopeViz(const ExampleConfig &config)
-		: ExampleBase{config},
+	StereoScopeViz(const Args &args)
+		: ExampleBase{args},
 		  left_scope{{{10, 10}, {(int)size.x - 20, (int)size.y - 20}}, colorL},
 		  right_scope{{{10, 10}, {(int)size.x - 20, (int)size.y - 20}}, colorR},
-		  required_frames{config.audio_duration_sec * sample_rate_hz}
+		  required_frames{args.get_audio_duration_sec() * sample_rate_hz}
 	{
 		colorL.set_mode(avz::ColorSettings::Mode::SOLID);
 		colorL.set_solid_color(sf::Color::Red);
 		colorR.set_mode(avz::ColorSettings::Mode::SOLID);
 		colorR.set_solid_color(sf::Color::Cyan);
 
-		left_scope.set_audio_duration(config.audio_duration_sec);
+		left_scope.set_audio_duration(args.get_audio_duration_sec());
 		left_scope.set_sample_rate(sample_rate_hz);
 		left_scope.set_shape_width(10);
 		left_scope.set_shape_spacing(5);
 
-		right_scope.set_audio_duration(config.audio_duration_sec);
+		right_scope.set_audio_duration(args.get_audio_duration_sec());
 		right_scope.set_sample_rate(sample_rate_hz);
 		right_scope.set_shape_width(10);
 		right_scope.set_shape_spacing(5);

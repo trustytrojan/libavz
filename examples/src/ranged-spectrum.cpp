@@ -17,9 +17,9 @@ struct RangedSpectrum : ExampleBase
 
 	avz::Interpolator ip;
 
-	RangedSpectrum(const ExampleConfig &config)
-		: ExampleBase{config},
-		  fft_size{static_cast<int>(config.audio_duration_sec * sample_rate_hz)},
+	RangedSpectrum(const Args &args)
+		: ExampleBase{args},
+		  fft_size{static_cast<int>(args.get_audio_duration_sec() * sample_rate_hz)},
 		  spectrum{{{}, (sf::Vector2i)size}, color},
 		  fa{fft_size}
 	{

@@ -21,9 +21,9 @@ struct OldBassNation : ExampleBase
 	avz::fx::Polar polar_left;
 	avz::fx::Polar polar_right;
 
-	OldBassNation(const ExampleConfig &config)
-		: ExampleBase{config},
-		  max_fft_size{static_cast<int>(config.audio_duration_sec * sample_rate_hz)},
+	OldBassNation(const Args &args)
+		: ExampleBase{args},
+		  max_fft_size{static_cast<int>(args.get_audio_duration_sec() * sample_rate_hz)},
 		  polar_left{(sf::Vector2f)size, size.y * 0.25f, size.y * 0.5f, M_PI / 2, M_PI},
 		  polar_right{(sf::Vector2f)size, size.y * 0.25f, size.y * 0.5f, -M_PI / 2, M_PI}
 	{
@@ -49,7 +49,7 @@ struct OldBassNation : ExampleBase
 		for (int i = 0; i < colors.size(); ++i)
 		{
 			float duration_diff = max_duration_diff - i * delta_duration;
-			const auto new_duration_sec = config.audio_duration_sec - duration_diff;
+			const auto new_duration_sec = args.get_audio_duration_sec() - duration_diff;
 			const int new_fft_size = new_duration_sec * sample_rate_hz;
 
 			cs.set_solid_color(colors[i]);

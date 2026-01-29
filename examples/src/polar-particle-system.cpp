@@ -28,10 +28,10 @@ struct PolarParticleSystem : ExampleBase
 		0.0f				// warping_factor: no warping for particles
 	};
 
-	PolarParticleSystem(const ExampleConfig &config)
-		: ExampleBase{config},
-		  fft_size{static_cast<int>(config.audio_duration_sec * sample_rate_hz)},
-		  ps{{{}, (sf::Vector2i)size}, 75, config.framerate},
+	PolarParticleSystem(const Args &args)
+		: ExampleBase{args},
+		  fft_size{static_cast<int>(args.get_audio_duration_sec() * sample_rate_hz)},
+		  ps{{{}, (sf::Vector2i)size}, 75, (int)args.get_framerate()},
 		  fa{fft_size}
 	{
 		ps.set_fade_out(false);

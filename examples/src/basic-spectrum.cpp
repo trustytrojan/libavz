@@ -16,8 +16,8 @@ struct BasicSpectrum : ExampleBase
 	avz::FrequencyAnalyzer fa;
 	avz::AudioAnalyzer aa;
 
-	BasicSpectrum(const ExampleConfig &config)
-		: ExampleBase{config},
+	BasicSpectrum(const Args &args)
+		: ExampleBase{args},
 		  spectrum{{{}, (sf::Vector2i)size}, color},
 		  fa{fft_size}
 	{

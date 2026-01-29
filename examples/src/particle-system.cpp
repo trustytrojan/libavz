@@ -18,10 +18,10 @@ struct ParticleSystemExample : ExampleBase
 	avz::FrequencyAnalyzer fa;
 	avz::AudioAnalyzer aa;
 
-	ParticleSystemExample(const ExampleConfig &config)
-		: ExampleBase{config},
-		  fft_size{static_cast<int>(config.audio_duration_sec * sample_rate_hz)},
-		  ps{{{}, (sf::Vector2i)size}, 50, config.framerate},
+	ParticleSystemExample(const Args &args)
+		: ExampleBase{args},
+		  fft_size{static_cast<int>(args.get_audio_duration_sec() * sample_rate_hz)},
+		  ps{{{}, (sf::Vector2i)size}, 50, (int)args.get_framerate()},
 		  fa{fft_size}
 	{
 		emplace_layer<avz::Layer>("particles").add_draw({ps});

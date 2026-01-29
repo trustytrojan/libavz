@@ -18,9 +18,9 @@ struct StereoPolarSpectrum : ExampleBase
 
 	avz::fx::Polar polar_left, polar_right;
 
-	StereoPolarSpectrum(const ExampleConfig &config)
-		: ExampleBase{config},
-		  fft_size{static_cast<int>(config.audio_duration_sec * sample_rate_hz)},
+	StereoPolarSpectrum(const Args &args)
+		: ExampleBase{args},
+		  fft_size{static_cast<int>(args.get_audio_duration_sec() * sample_rate_hz)},
 		  spectrum_left{{{}, (sf::Vector2i)size}, cs},
 		  spectrum_right{{{}, (sf::Vector2i)size}, cs},
 		  fa{fft_size},

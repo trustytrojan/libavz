@@ -83,10 +83,10 @@ struct MirroredBassNation : ExampleBase
 	avz::fx::Polar spectrum_polar{(sf::Vector2f)size, size.y * 0.25f, size.y * 0.5f, M_PI / 2, M_PI};
 	avz::fx::Mirror mirror_l2r{0};
 
-	MirroredBassNation(const ExampleConfig &config)
-		: ExampleBase{config},
-		  fft_size{static_cast<int>(config.audio_duration_sec * sample_rate_hz)},
-		  ps{{{}, (sf::Vector2i)size}, 50, config.framerate}
+	MirroredBassNation(const Args &args)
+		: ExampleBase{args},
+		  fft_size{static_cast<int>(args.get_audio_duration_sec() * sample_rate_hz)},
+		  ps{{{}, (sf::Vector2i)size}, 50, (int)args.get_framerate()}
 	{
 		ps.set_fade_out(false);
 		ps.set_start_offscreen(false);
@@ -116,18 +116,18 @@ struct MirroredBassNation : ExampleBase
 		for (int i = 0; i < colors.size(); ++i)
 		{
 			float duration_diff = max_duration_diff - i * delta_duration;
-			const auto new_duration_sec = config.audio_duration_sec - duration_diff;
+			const auto new_duration_sec = args.get_audio_duration_sec() - duration_diff;
 			const int new_fft_size = new_duration_sec * sample_rate_hz;
 
 			cs.set_solid_color(colors[i]);
 
 			auto &spectrum = *spectrums.emplace_back(
 				std::make_unique<BassNationSpectrumLayer>(new_fft_size, sample_rate_hz, size, cs, true));
-			spectrum.spectrum.set_use_gs(config.gs_enabled);
+			spectrum.spectrum.set_use_gs(args.get_geometry_shader_enabled());
 			spectrum.configure_spectrum(false, size);
 
 			// Enable GS spectrum-bar expansion on the polar effect
-			if (config.gs_enabled)
+			if (args.get_geometry_shader_enabled())
 				spectrum_polar.set_gs_spectrum_bars(&spectrum.spectrum);
 
 			spectrum_layer.add_draw({spectrum.spectrum, &spectrum_polar});

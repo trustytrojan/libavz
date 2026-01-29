@@ -13,15 +13,15 @@ struct Scope : ExampleBase
 	std::vector<float> mono;
 	const int required_frames;
 
-	Scope(const ExampleConfig &config)
-		: ExampleBase{config},
+	Scope(const Args &args)
+		: ExampleBase{args},
 		  scope{{{10, 10}, {(int)size.x - 20, (int)size.y - 20}}, color},
-		  required_frames{std::max(1, (int)std::round(config.audio_duration_sec * sample_rate_hz))}
+		  required_frames{std::max(1, (int)std::round(args.get_audio_duration_sec() * sample_rate_hz))}
 	{
 		color.set_mode(avz::ColorSettings::Mode::SOLID);
 		color.set_solid_color(sf::Color::Green);
 
-		scope.set_audio_duration(config.audio_duration_sec);
+		scope.set_audio_duration(args.get_audio_duration_sec());
 		scope.set_sample_rate(sample_rate_hz);
 		scope.set_shape_width(3);
 		scope.set_shape_spacing(2);
@@ -51,4 +51,4 @@ LIBAVZ_EXAMPLE_MAIN_CUSTOM(
 	Scope,
 	"Audio oscilloscope visualization",
 	0.02f,
-	std::max(1, (int)std::round(config.audio_duration_sec *viz.sample_rate_hz)))
+	std::max(1, (int)std::round(args.get_audio_duration_sec() *viz.sample_rate_hz)))

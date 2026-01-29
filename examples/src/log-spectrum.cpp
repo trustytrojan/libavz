@@ -22,9 +22,9 @@ struct LogSpectrum : ExampleBase
 	// needed to interpolate the gaps left by BinPacker's spreading out of bins
 	avz::Interpolator ip;
 
-	LogSpectrum(const ExampleConfig &config)
-		: ExampleBase{config},
-		  fft_size{config.audio_duration_sec * sample_rate_hz},
+	LogSpectrum(const Args &args)
+		: ExampleBase{args},
+		  fft_size{args.get_audio_duration_sec() * sample_rate_hz},
 		  spectrum{{{}, (sf::Vector2i)size}, color},
 		  s2{{{}, (sf::Vector2i)size}, color},
 		  fa{fft_size}
