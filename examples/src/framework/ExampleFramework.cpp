@@ -57,7 +57,7 @@ ExampleBase::ExampleBase(const Args &args)
 {
 	if (args.get_profiler_enabled())
 	{
-		enable_profiler();
+		set_profiler_enabled(true);
 		if (args.get_font_path().size())
 			set_font(std::string{args.get_font_path()});
 		else

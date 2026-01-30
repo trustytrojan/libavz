@@ -85,7 +85,7 @@ public:
 	void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 	inline void set_font(const std::string &path) { font = sf::Font{path}; }
-	inline void enable_profiler() { profiler_enabled = true; }
+	inline void set_profiler_enabled(bool b) { profiler_enabled = b; }
 
 protected:
 	virtual void update(std::span<const float> audio_buffer) {}

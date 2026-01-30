@@ -17,9 +17,7 @@ endif()
 
 # ImGui support is now managed by the global LIBAVZ_USE_IMGUI option
 # Main library will inherit definitions and linking from gfx library
-if(LIBAVZ_USE_IMGUI)
+if(LIBAVZ_USE_IMGUI AND LIBAVZ_IMGUI_AVAILABLE)
 	target_compile_definitions(avz-main PUBLIC LIBAVZ_IMGUI)
-	if(LIBAVZ_IMGUI_AVAILABLE)
-		target_link_libraries(avz-main PUBLIC ImGui-SFML::ImGui-SFML)
-	endif()
+	target_link_libraries(avz-main PUBLIC ImGui-SFML::ImGui-SFML)
 endif()

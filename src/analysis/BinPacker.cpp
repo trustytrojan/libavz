@@ -124,7 +124,7 @@ void avz::BinPacker::imgui()
 				set_nth_root(nth);
 		}
 
-		const char *accum[] = {"SUM", "MAX"};
+		const char *accum[] = {"Sum", "Max"};
 		ImGui::Combo("Accumulation", (int *)&am, accum, IM_ARRAYSIZE(accum));
 	}
 }
