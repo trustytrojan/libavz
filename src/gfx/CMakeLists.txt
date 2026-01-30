@@ -51,3 +51,11 @@ add_custom_target(generate_shader_headers DEPENDS ${SHADER_HEADERS})
 add_dependencies(avz-gfx generate_shader_headers)
 
 target_include_directories(avz-gfx PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/)
+
+# ImGui support (optional)
+if(LIBAVZ_USE_IMGUI)
+	target_compile_definitions(avz-gfx PUBLIC LIBAVZ_IMGUI)
+	if(LIBAVZ_IMGUI_AVAILABLE)
+		target_link_libraries(avz-gfx PUBLIC ImGui-SFML::ImGui-SFML)
+	endif()
+endif()

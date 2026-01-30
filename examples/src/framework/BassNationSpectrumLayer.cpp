@@ -58,7 +58,6 @@ void BassNationSpectrumLayer::configure_spectrum(bool prev, sf::Vector2u size)
 	spectrum.set_bar_spacing(0);
 	spectrum.set_multiplier(6);
 	spectrum.set_backwards(prev);
-	spectrum.update_bar_colors();
 	s.resize(spectrum.get_bar_count());
 }
 

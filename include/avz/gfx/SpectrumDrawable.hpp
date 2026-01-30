@@ -35,7 +35,11 @@ public:
 	inline int get_bar_count() const { return bar.count; }
 
 	inline void set_debug_rect(bool b) { debug_rect = b; }
+	inline bool get_debug_rect() const { return debug_rect; }
+
 	inline void set_multiplier(const float multiplier) { this->multiplier = multiplier; }
+	inline float get_multiplier() const { return multiplier; }
+
 	inline void set_use_gs(bool b)
 	{
 		if (use_gs == b)
@@ -45,6 +49,8 @@ public:
 	}
 	inline bool get_use_gs() const { return use_gs; }
 
+	inline bool get_backwards() const { return backwards; }
+
 	void set_rect(const sf::IntRect &rect);
 	void set_bar_width(const int width);
 	void set_bar_spacing(const int spacing);
@@ -53,9 +59,12 @@ public:
 	inline int get_bar_width() const { return bar.width; }
 	inline sf::IntRect get_rect() const { return rect; }
 
-	void update_bar_colors();
 	void update(std::span<const float> spectrum);
 	void draw(sf::RenderTarget &target, sf::RenderStates states = {}) const override;
+
+#ifdef LIBAVZ_IMGUI
+	void imgui();
+#endif
 
 private:
 	int get_bar_vertex_index(int bar_idx, int vertex_num) const;

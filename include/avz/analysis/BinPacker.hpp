@@ -68,7 +68,7 @@ public:
 	 * Set frequency bin accumulation method.
 	 * @param am new accumulation method to use
 	 */
-	void set_accum_method(AccumulationMethod am);
+	inline void set_accum_method(AccumulationMethod am) { this->am = am; }
 
 	/**
 	 * Get the current scale.
@@ -91,6 +91,13 @@ public:
 	 * @param in input spectrum (larger size)
 	 */
 	void bin_pack(std::span<float> out, std::span<const float> in);
+
+#ifdef LIBAVZ_IMGUI
+	/**
+	 * Render ImGui controls for bin packing properties.
+	 */
+	void imgui();
+#endif
 
 private:
 	float calc_index_ratio(float i) const;

@@ -41,6 +41,13 @@ public:
 	 * @param index_ratio the ratio of your loop index (`i`) to the total number of bars to print (`bars.size()`)
 	 */
 	sf::Color calculate_color(float index_ratio) const;
+
+#ifdef LIBAVZ_IMGUI
+	/**
+	 * Render ImGui controls for color settings.
+	 */
+	void imgui();
+#endif
 };
 
 } // namespace avz

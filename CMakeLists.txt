@@ -31,6 +31,11 @@ option(LIBAVZ_BUILD_GFX "Build the visualizer rendering library" ON)
 option(LIBAVZ_BUILD_MEDIA "Build the media I/O library" ON)
 option(LIBAVZ_BUILD_MAIN "Build the visualizer runner library" ON)
 option(LIBAVZ_BUILD_EXAMPLES "Build the example programs" ON)
+option(LIBAVZ_USE_IMGUI "Enable ImGui support in analysis and gfx libraries" ON)
+
+if(LIBAVZ_USE_IMGUI)
+	include(${CMAKE_SOURCE_DIR}/cmake/libavz-imgui.cmake)
+endif()
 
 if(LIBAVZ_BUILD_ANALYSIS)
 	add_subdirectory(src/analysis)

@@ -6,6 +6,11 @@
 #include <portaudio.hpp>
 #endif
 
+#ifdef LIBAVZ_IMGUI
+#include <imgui-SFML.h>
+#include <imgui.h>
+#endif
+
 namespace avz
 {
 
@@ -33,6 +38,16 @@ void Player::start_in_window(const std::string &title)
 	};
 	window.setVerticalSyncEnabled(true);
 
+#ifdef LIBAVZ_IMGUI
+	if (!ImGui::SFML::Init(window))
+	{
+		std::cerr << "[Player::start_in_window] Failed to initialize ImGui-SFML\n";
+		return;
+	}
+	// clock used by ImGui-SFML to compute deltaTime each frame
+	sf::Clock imgui_delta_clock;
+#endif
+
 #ifdef LIBAVZ_PORTAUDIO
 #ifdef __linux__
 	// Suppress ALSA warnings during PortAudio initialization
@@ -57,11 +72,16 @@ void Player::start_in_window(const std::string &title)
 
 	while (window.isOpen())
 	{
-		window.handleEvents(
-			[&](sf::Event::Closed) { window.close(); },
-			[&](sf::Event::KeyPressed key)
+		while (const auto event = window.pollEvent())
+		{
+#ifdef LIBAVZ_IMGUI
+			ImGui::SFML::ProcessEvent(window, *event);
+#endif
+			if (event->is<sf::Event::Closed>())
+				window.close();
+			if (const auto key = event->getIf<sf::Event::KeyPressed>())
 			{
-				switch (key.scancode)
+				switch (key->scancode)
 				{
 				case sf::Keyboard::Scan::Space:
 					paused = !paused;
@@ -76,7 +96,12 @@ void Player::start_in_window(const std::string &title)
 				default:
 					break;
 				}
-			});
+			}
+		}
+
+#ifdef LIBAVZ_IMGUI
+		ImGui::SFML::Update(window, imgui_delta_clock.restart());
+#endif
 
 		if (!paused)
 		{
@@ -110,8 +135,15 @@ void Player::start_in_window(const std::string &title)
 
 		window.clear();
 		window.draw(viz);
+#ifdef LIBAVZ_IMGUI
+		ImGui::SFML::Render(window);
+#endif
 		window.display();
 	}
+
+#ifdef LIBAVZ_IMGUI
+	ImGui::SFML::Shutdown();
+#endif
 }
 
 void Player::encode(const std::string &outfile, const std::string &vcodec, const std::string &acodec)

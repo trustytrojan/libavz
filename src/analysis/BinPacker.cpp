@@ -3,6 +3,10 @@
 #include <cmath>
 #include <stdexcept>
 
+#ifdef LIBAVZ_IMGUI
+#include <imgui.h>
+#endif
+
 namespace avz
 {
 
@@ -30,15 +34,12 @@ void BinPacker::set_nth_root(const int nth_root)
 	compute_bin_pack_index_mappings(bin_pack_index_mapping.size(), bin_pack_input_size);
 }
 
-void BinPacker::set_accum_method(const AccumulationMethod am)
-{
-	this->am = am;
-}
-
 void BinPacker::bin_pack(std::span<float> out, std::span<const float> in)
 {
 	const auto out_size = out.size(), in_size = in.size();
-	compute_bin_pack_index_mappings(out_size, in_size);
+
+	if (out_size != bin_pack_index_mapping.size() || in_size != bin_pack_input_size)
+		compute_bin_pack_index_mappings(out_size, in_size);
 
 	std::ranges::fill(out, 0);
 
@@ -90,11 +91,7 @@ float BinPacker::calc_index_ratio(const float i) const
 
 void BinPacker::compute_bin_pack_index_mappings(const size_t out_size, const size_t in_size)
 {
-	// don't recompute mappings if out_size didn't change!
-	if (!out_size || bin_pack_index_mapping.size() == out_size)
-		return;
-
-	// this NEEDS to be updated for different in_sizes!
+	// update cached scale maxima for mapping calculations
 	scale_max.calc(in_size, nthroot_inv);
 	bin_pack_input_size = in_size;
 	bin_pack_index_mapping.assign(out_size, {-1, -1});
@@ -109,3 +106,26 @@ void BinPacker::compute_bin_pack_index_mappings(const size_t out_size, const siz
 }
 
 } // namespace avz
+
+#ifdef LIBAVZ_IMGUI
+void avz::BinPacker::imgui()
+{
+	if (ImGui::CollapsingHeader("BinPacker"))
+	{
+		const char *scales[] = {"Linear", "Log", "Nth root"};
+		int scale_idx = static_cast<int>(scale);
+		if (ImGui::Combo("Scale", &scale_idx, scales, IM_ARRAYSIZE(scales)))
+			set_scale(static_cast<Scale>(scale_idx));
+
+		if (scale == Scale::NTH_ROOT)
+		{
+			int nth = nth_root;
+			if (ImGui::SliderInt("Nth root", &nth, 2, 16))
+				set_nth_root(nth);
+		}
+
+		const char *accum[] = {"SUM", "MAX"};
+		ImGui::Combo("Accumulation", (int *)&am, accum, IM_ARRAYSIZE(accum));
+	}
+}
+#endif

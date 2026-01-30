@@ -2,6 +2,10 @@
 #include <avz/analysis.hpp>
 #include <avz/gfx.hpp>
 
+#ifdef LIBAVZ_IMGUI
+#include <imgui.h>
+#endif
+
 using namespace avz::examples;
 
 struct LogSpectrum : ExampleBase
@@ -12,7 +16,7 @@ struct LogSpectrum : ExampleBase
 	std::vector<float> a, s;
 
 	avz::ColorSettings color;
-	avz::SpectrumDrawable spectrum, s2;
+	avz::SpectrumDrawable spectrum;
 	avz::FrequencyAnalyzer fa;
 	avz::AudioAnalyzer aa;
 
@@ -26,19 +30,12 @@ struct LogSpectrum : ExampleBase
 		: ExampleBase{args},
 		  fft_size{args.get_audio_duration_sec() * sample_rate_hz},
 		  spectrum{{{}, (sf::Vector2i)size}, color},
-		  s2{{{}, (sf::Vector2i)size}, color},
 		  fa{fft_size}
 	{
 		spectrum.set_bar_width(1);
 		spectrum.set_bar_spacing(0);
 		spectrum.set_multiplier(4);
 		emplace_layer<avz::Layer>("spectrum").add_draw({spectrum});
-
-		s2.set_bar_width(1);
-		s2.set_bar_spacing(0);
-		s2.set_multiplier(4);
-		s2.set_use_gs(true);
-		emplace_layer<avz::Layer>("spectrum_gs").add_draw({s2});
 
 		// logarithmically scale bin indices (frequencies)
 		bp.set_scale(avz::BinPacker::Scale::LOG);
@@ -50,6 +47,15 @@ struct LogSpectrum : ExampleBase
 
 	void update(std::span<const float> audio_buffer) override
 	{
+#ifdef LIBAVZ_IMGUI
+		ImGui::Begin("Spectrum");
+		spectrum.imgui();
+		bp.imgui();
+		ip.imgui();
+		fa.imgui();
+		color.imgui();
+		ImGui::End();
+#endif
 		// make sure we can fit one channel of audio
 		a.resize(fft_size);
 
@@ -72,7 +78,7 @@ struct LogSpectrum : ExampleBase
 		// finally, pass the data to SpectrumDrawable to draw to the screen!
 		capture_time("spectrum_update", spectrum.update(s));
 
-		capture_time("spectrum_gs_update", s2.update(s));
+		color.increment_wheel_time();
 	}
 };
 

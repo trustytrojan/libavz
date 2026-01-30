@@ -3,6 +3,10 @@
 #include <cassert>
 #include <shader_headers/spectrum_bars.geom.h>
 
+#ifdef LIBAVZ_IMGUI
+#include <imgui.h>
+#endif
+
 static sf::Shader gs_shader;
 static void init_gs_shader()
 {
@@ -82,8 +86,7 @@ void SpectrumDrawable::update(std::span<const float> spectrum)
 		{
 			const float height = std::clamp(multiplier * rect.size.y * spectrum[i], 0.f, (float)rect.size.y);
 			vertex_array[i].position.y = height;
-			if (update_colors)
-				vertex_array[i].color = color.calculate_color((float)i / bar.count);
+			vertex_array[i].color = color.calculate_color((float)i / bar.count);
 		}
 		return;
 	}
@@ -95,8 +98,7 @@ void SpectrumDrawable::update(std::span<const float> spectrum)
 		const int bl = get_bar_vertex_index(i, 1);
 		const int tr = get_bar_vertex_index(i, 2);
 		const int br = get_bar_vertex_index(i, 3);
-		const sf::Color bar_color =
-			update_colors ? color.calculate_color((float)i / bar.count) : vertex_array[tl].color;
+		const sf::Color bar_color = color.calculate_color((float)i / bar.count);
 
 		const float bottom_y = rect.position.y + rect.size.y;
 		const float top_y = bottom_y - height;
@@ -159,29 +161,6 @@ void SpectrumDrawable::draw(sf::RenderTarget &target, sf::RenderStates states) c
 		c.setFillColor(sf::Color::Red);
 		target.draw(r);
 		target.draw(c);
-	}
-}
-
-void SpectrumDrawable::update_bar_colors()
-{
-	if (use_gs)
-	{
-		for (int i = 0; i < bar.count; ++i)
-			vertex_array[i].color = color.calculate_color((float)i / bar.count);
-		return;
-	}
-
-	for (int i = 0; i < bar.count; ++i)
-	{
-		const sf::Color bar_color = color.calculate_color((float)i / bar.count);
-
-		for (int v = 0; v < 4; ++v)
-		{
-			const int idx = get_bar_vertex_index(i, v);
-			vertex_array[idx].color = bar_color;
-		}
-		if (i > 0)
-			vertex_array[6 * i].color = bar_color;
 	}
 }
 
@@ -280,3 +259,37 @@ void SpectrumDrawable::update_bars()
 }
 
 } // namespace avz
+
+#ifdef LIBAVZ_IMGUI
+void avz::SpectrumDrawable::imgui()
+{
+	if (ImGui::CollapsingHeader("Spectrum"))
+	{
+		int bw = bar.width;
+		if (ImGui::SliderInt("Bar width", &bw, 1, 256))
+			set_bar_width(bw);
+
+		int spacing = bar.spacing;
+		if (ImGui::SliderInt("Bar spacing", &spacing, 0, 64))
+			set_bar_spacing(spacing);
+
+		float mult = multiplier;
+		if (ImGui::SliderFloat("Multiplier", &mult, 0.1f, 32.f, "%.2f"))
+			set_multiplier(mult);
+
+		bool backwards_val = backwards;
+		if (ImGui::Checkbox("Backwards", &backwards_val))
+			set_backwards(backwards_val);
+
+		bool use_gs_val = use_gs;
+		if (ImGui::Checkbox("Use geometry shader", &use_gs_val))
+			set_use_gs(use_gs_val);
+
+		bool dbg = debug_rect;
+		if (ImGui::Checkbox("Show debug rect", &dbg))
+			set_debug_rect(dbg);
+
+		ImGui::Text("Bars: %d", bar.count);
+	}
+}
+#endif

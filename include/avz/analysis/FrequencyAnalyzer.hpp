@@ -51,6 +51,7 @@ public:
 	 * @param wf new window function to use
 	 */
 	void set_window_func(WindowFunction wf);
+	inline WindowFunction get_window_func() const { return window_func; }
 
 	/**
 	 * Copies the `wavedata` to the FFT processor for rendering.
@@ -60,6 +61,13 @@ public:
 
 	inline constexpr void execute_fft() const { fftw.execute(); }
 	inline constexpr std::span<const std::complex<float>> get_output() const { return fftw.output(); }
+
+#ifdef LIBAVZ_IMGUI
+	/**
+	 * Render ImGui controls for frequency analyzer properties.
+	 */
+	void imgui();
+#endif
 
 private:
 	void compute_window_values();

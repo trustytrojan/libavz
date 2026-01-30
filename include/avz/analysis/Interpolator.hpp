@@ -39,6 +39,42 @@ public:
 	InterpolationType get_interp_type() const { return type; }
 
 	/**
+	 * Helpers to map UI indices (0..N-1) to enum values and back.
+	 * The underlying tk::spline values are not guaranteed to be consecutive,
+	 * so the UI must use a compact 0-based index space.
+	 */
+	inline static int interp_type_to_index(InterpolationType t)
+	{
+		switch (t)
+		{
+		case InterpolationType::LINEAR:
+			return 0;
+		case InterpolationType::CSPLINE:
+			return 1;
+		case InterpolationType::CSPLINE_HERMITE:
+			return 2;
+		default:
+			return 1;
+		}
+	}
+
+	inline static InterpolationType interp_type_from_index(int idx)
+	{
+		switch (idx)
+		{
+		case 0:
+			return InterpolationType::LINEAR;
+		case 1:
+			return InterpolationType::CSPLINE;
+		default:
+			return InterpolationType::CSPLINE_HERMITE;
+		}
+	}
+
+	inline int get_interp_type_index() const { return interp_type_to_index(type); }
+	inline void set_interp_type_index(int idx) { set_interp_type(interp_type_from_index(idx)); }
+
+	/**
 	 * Interpolate spectrum data to fill gaps between non-zero values.
 	 * Uses the interpolation type set via set_interp_type().
 	 * @param spectrum spectrum data to interpolate in-place
@@ -58,6 +94,13 @@ public:
 	 * @return interpolated value
 	 */
 	inline float sample(float x) const { return spline(x); }
+
+#ifdef LIBAVZ_IMGUI
+	/**
+	 * Render ImGui controls for interpolation type.
+	 */
+	void imgui();
+#endif
 };
 
 } // namespace avz

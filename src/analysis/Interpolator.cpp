@@ -1,5 +1,9 @@
 #include <avz/analysis/Interpolator.hpp>
 
+#ifdef LIBAVZ_IMGUI
+#include <imgui.h>
+#endif
+
 namespace avz
 {
 
@@ -43,3 +47,16 @@ void Interpolator::set_values(std::span<const float> values)
 }
 
 } // namespace avz
+
+#ifdef LIBAVZ_IMGUI
+void avz::Interpolator::imgui()
+{
+	if (ImGui::CollapsingHeader("Interpolator"))
+	{
+		const char *modes[] = {"Linear", "Cubic (cspline)", "Cubic (hermite)"};
+		int it = get_interp_type_index();
+		if (ImGui::Combo("Type", &it, modes, IM_ARRAYSIZE(modes)))
+			set_interp_type_index(it);
+	}
+}
+#endif
