@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <format>
 #include <limits>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -25,21 +26,27 @@ class Profiler
 	};
 
 	std::vector<TimingStat> stats;
-	sf::Clock clock;
-	std::string current_section;
+	std::stack<sf::Clock> current_clocks;
+	std::stack<std::string> current_sections;
 
 public:
 	inline void startSection(std::string_view name)
 	{
-		current_section = name;
-		clock.restart();
+		current_sections.emplace(name);
+		current_clocks.emplace();
 	}
 
 	inline void endSection()
 	{
+		auto &clock = current_clocks.top();
 		clock.stop();
-		auto &stat = get_or_create_timing_stat(current_section);
 		const float time_ms = clock.getElapsedTime().asMicroseconds() / 1e3f;
+		current_clocks.pop(); // destroys the clock!
+
+		const auto &current_section = current_sections.top();
+		auto &stat = get_or_create_timing_stat(current_section);
+		current_sections.pop(); // destroys the string!
+
 		stat.current = time_ms;
 		if (time_ms < stat.min)
 			stat.min = time_ms;
@@ -66,10 +73,8 @@ public:
 private:
 	TimingStat &get_or_create_timing_stat(const std::string &label)
 	{
-		auto it = std::ranges::find_if(stats, [&label](auto &stat) { return stat.name == label; });
-		if (it != stats.end())
-			return *it;
-		return stats.emplace_back(label);
+		const auto it = std::ranges::find_if(stats, [&label](auto &stat) { return stat.name == label; });
+		return (it != stats.end()) ? *it : stats.emplace_back(label);
 	}
 };
 

@@ -18,7 +18,10 @@ link_libraries(
 add_library(example-framework src/framework/ExampleFramework.cpp)
 link_libraries(example-framework)
 
-add_library(bass-nation-layer src/framework/BassNationSpectrumLayer.cpp)
+add_library(bass-nation
+	src/framework/BassNationSpectrumLayer.cpp
+	src/framework/BassNationUtils.cpp
+)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -31,7 +34,7 @@ foreach(source ${EXAMPLE_SOURCES})
 	add_executable(${example} ${source})
 
 	if(example MATCHES "bass-nation")
-		target_link_libraries(${example} PUBLIC bass-nation-layer)
+		target_link_libraries(${example} PUBLIC bass-nation)
 	endif()
 endforeach()
 

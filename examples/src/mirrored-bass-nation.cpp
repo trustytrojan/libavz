@@ -1,60 +1,12 @@
+#include "BassNationSpectrumLayer.hpp"
+#include "BassNationUtils.hpp"
 #include "ExampleFramework.hpp"
 #include <avz/analysis.hpp>
 #include <avz/gfx.hpp>
-
 #include <future>
 #include <memory>
 
-#include "BassNationSpectrumLayer.hpp"
-
 using namespace avz::examples;
-
-/**
- * Calculates the additional particle displacement using the bass frequency spectrum passed
- * as `bass_amps`. It is expected to contain a 20-135Hz frequency range, straight from FFT
- * amplitude output.
- */
-float bass_nation_additional_displacement(std::span<const float> bass_amps)
-{
-	// Constants for the "Nation" look
-	constexpr auto mid_point = 0.3f;	// Full weight at 53Hz
-	constexpr auto k_rise = 0.08f;		// Smooth, quick rise from 20Hz
-	constexpr auto k_fall = 0.08f;		// Gentle fall toward 135Hz
-	constexpr auto threshold = 1.0f;	// Your "Kick" detection threshold
-	constexpr auto boost_factor = 3.0f; // How much the "Bonus" multiplies
-
-	float max{};
-
-	for (size_t i = 0; i < bass_amps.size(); ++i)
-	{
-		const auto x = (float)i / bass_amps.size();
-
-		// 1. Optimized Asymmetric Weighting
-		const auto dist = x - mid_point;
-		const auto k = (dist < 0) ? k_rise : k_fall;
-		const auto freq_weight = std::exp(-(dist * dist) / k);
-
-		// 2. Apply weight to raw amplitude
-		auto val = bass_amps[i] * freq_weight;
-
-		// 3. The "Kick Bonus" (Exponential Expansion)
-		// Example: if val is 1.2, the 'extra' 0.2 is taken out, squared, then added back to val.
-		if (val > threshold)
-		{
-			const auto extra = val - threshold;
-			val = threshold + (extra * extra * boost_factor);
-		}
-
-		// Dividing by 5, for some reason, makes it look perfect.
-		val /= 5;
-
-		// Keep finding the max.
-		if (val > max)
-			max = val;
-	}
-
-	return max;
-}
 
 struct MirroredBassNation : ExampleBase
 {
@@ -126,12 +78,13 @@ struct MirroredBassNation : ExampleBase
 			spectrum.spectrum.set_use_gs(args.get_geometry_shader_enabled());
 			spectrum.configure_spectrum(false, size);
 
-			// Enable GS spectrum-bar expansion on the polar effect
-			if (args.get_geometry_shader_enabled())
-				spectrum_polar.set_gs_spectrum_bars(&spectrum.spectrum);
-
 			spectrum_layer.add_draw({spectrum.spectrum, &spectrum_polar});
 		}
+
+		// Enable GS spectrum-bar expansion on the polar effect
+		if (args.get_geometry_shader_enabled())
+			// we can use any of them, since they all have the same bar_width and bottom_y
+			spectrum_polar.set_gs_spectrum_bars(&spectrums[0]->spectrum);
 
 		// Add mirror effect to create mirrored versions on the right side
 		spectrum_layer.add_effect(&mirror_l2r);
@@ -151,7 +104,7 @@ struct MirroredBassNation : ExampleBase
 			a.resize(fft_size);
 
 			// extract first channel of audio and perform FFT (needed in case media file has stereo audio)
-			capture_time("strided_copy", avz::util::extract_channel(a, audio_buffer, num_channels, 0));
+			capture_time("extract_channel", avz::util::extract_channel(a, audio_buffer, num_channels, 0));
 			capture_time("fft", aa.execute_fft(fa, a));
 
 			// compute amplitudes from FFT output
@@ -162,6 +115,8 @@ struct MirroredBassNation : ExampleBase
 			p.resize(bass_amps.size());
 
 			// calculate and pass additional particle displacement to the ParticleSystem's update() method
+			float max;
+			capture_time("bn_calc", max = bass_nation_additional_displacement(bass_amps));
 			capture_time("ps_update", ps.update(bass_nation_additional_displacement(bass_amps)));
 		}
 
