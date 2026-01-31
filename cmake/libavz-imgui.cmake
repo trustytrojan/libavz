@@ -23,8 +23,10 @@ if(NOT SFML_FOUND)
 endif()
 
 # Set up imgui-sfml (depends on imgui being downloaded manually)
-set(BUILD_SHARED_LIBS ON)
-# imgui-sfml's cmake sets SFML_STATIC_LIBRARIES based on BUILD_SHARED_LIBS
+if(NOT WIN32)
+	# imgui-sfml's cmake sets SFML_STATIC_LIBRARIES based on BUILD_SHARED_LIBS
+	set(BUILD_SHARED_LIBS ON)
+endif()
 set(IMGUI_DIR ${imgui_SOURCE_DIR})
 FetchContent_Declare(imgui-sfml URL https://github.com/SFML/imgui-sfml/archive/v3.0.tar.gz)
 FetchContent_MakeAvailable(imgui-sfml)
