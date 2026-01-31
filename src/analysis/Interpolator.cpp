@@ -1,4 +1,5 @@
 #include <avz/analysis/Interpolator.hpp>
+#include <iostream>
 
 #ifdef LIBAVZ_IMGUI
 #include <imgui.h>
@@ -26,6 +27,15 @@ void Interpolator::interpolate(std::span<float> range)
 		m_spline_y.emplace_back(range[i]);
 	}
 
+	// we can ignore this problem in release builds as tk-spline's assertion will be gone
+#ifndef NDEBUG
+	if (m_spline_x.size() < 3)
+	{
+		std::cerr << "[Interpolator::interpolate] < 3 points provided, skipping interpolation\n";
+		return;
+	}
+#endif
+
 	spline.set_points(m_spline_x, m_spline_y, (tk::spline::spline_type)type);
 
 	// fill in the gaps
@@ -42,6 +52,15 @@ void Interpolator::set_values(std::span<const float> values)
 		m_spline_x.emplace_back(i);
 		m_spline_y.emplace_back(values[i]);
 	}
+
+	// we can ignore this problem in release builds as tk-spline's assertion will be gone
+#ifndef NDEBUG
+	if (m_spline_x.size() < 3)
+	{
+		std::cerr << "[Interpolator::set_values] < 3 points provided, skipping interpolation\n";
+		return;
+	}
+#endif
 
 	spline.set_points(m_spline_x, m_spline_y, (tk::spline::spline_type)type);
 }

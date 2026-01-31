@@ -30,7 +30,6 @@ namespace avz
 class Base : public sf::Drawable
 {
 public:
-	// avz output size. cannot be changed, so make sure your window is not resizable.
 	const sf::Vector2u size;
 
 protected:
@@ -52,7 +51,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<Layer, T>, "T must derive from Layer");
 		auto up = std::make_unique<T>(std::forward<Args>(args)...);
-		T *ptr = up.get();
+		const auto ptr = up.get();
 		layers.emplace_back(std::move(up));
 		return *ptr;
 	}
@@ -60,25 +59,17 @@ public:
 	// Find a layer by name (non-owning raw pointer). Returns nullptr if not found.
 	Layer *get_layer(const std::string &name);
 
-	/**
-	 * Get a layer by name with automatic type casting.
-	 * @tparam T The derived Layer type to cast to
-	 * @param name The name of the layer
-	 * @returns A shared_ptr<T> if the layer exists and is of type T, nullptr otherwise
-	 *
-	 * Usage:
-	 * auto my_layer = get_layer_as<MyLayerType>("my_layer");
-	 */
+	// Get a layer by name with automatic type casting.
 	template <typename T>
 	T *get_layer_as(const std::string &name)
 	{
+		static_assert(std::is_base_of_v<Layer, T>, "T must derive from Layer");
 		return dynamic_cast<T *>(get_layer(name));
 	}
 
 	/**
-	 * Prepare the next frame to be drawn with `draw()`. Runs all layers.
+	 * Prepare the next frame to be drawn with `draw()`. Calls the derived `update()` and runs all layers.
 	 * @param audio_buffer A span of the audio data for this frame.
-	 * @returns Whether another frame can be prepared
 	 */
 	void next_frame(std::span<const float> audio_buffer);
 

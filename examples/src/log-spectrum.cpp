@@ -10,8 +10,6 @@ using namespace avz::examples;
 
 struct LogSpectrum : ExampleBase
 {
-	int fft_size{};
-
 	// audio, spectrum
 	std::vector<float> a, s;
 
@@ -28,9 +26,8 @@ struct LogSpectrum : ExampleBase
 
 	LogSpectrum(const Args &args)
 		: ExampleBase{args},
-		  fft_size{args.get_audio_duration_sec() * sample_rate_hz},
-		  spectrum{{{}, (sf::Vector2i)size}, color},
-		  fa{fft_size}
+		  fa{args.get_audio_duration_sec() * sample_rate_hz},
+		  spectrum{{{}, (sf::Vector2i)size}, color}
 	{
 		spectrum.set_bar_width(1);
 		spectrum.set_bar_spacing(0);
@@ -57,7 +54,7 @@ struct LogSpectrum : ExampleBase
 		ImGui::End();
 #endif
 		// make sure we can fit one channel of audio
-		a.resize(fft_size);
+		a.resize(fa.get_fft_size());
 
 		// extract first channel of audio and perform FFT (needed in case media file has stereo audio)
 		capture_time("strided_copy", avz::util::extract_channel(a, audio_buffer, num_channels, 0));
@@ -82,4 +79,4 @@ struct LogSpectrum : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(LogSpectrum, "Spectrum visualization with logarithmic frequency scaling", 0.1f, viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN_CUSTOM(LogSpectrum, "Spectrum visualization with logarithmic frequency scaling", 0.1f, viz.fa.get_fft_size())
