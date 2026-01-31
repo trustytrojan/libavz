@@ -88,8 +88,8 @@ struct OldBassNation : ExampleBase
 		if (args.get_geometry_shader_enabled())
 		{
 			// we can use any of them, since they all have the same bar_width and bottom_y
-			polar_left.set_gs_spectrum_bars(&spectrums[0]->spectrum);
-			polar_right.set_gs_spectrum_bars(&spectrums[0]->spectrum);
+			polar_left.set_spectrum_gs(&spectrums[0]->spectrum);
+			polar_right.set_spectrum_gs(&spectrums[0]->spectrum);
 		}
 
 		futures.resize(spectrums.size());

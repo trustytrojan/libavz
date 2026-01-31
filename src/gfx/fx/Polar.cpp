@@ -45,7 +45,7 @@ Polar::Polar(sf::Vector2f size, float br, float mr, float angle_start, float ang
 
 const sf::Shader &Polar::getShader() const
 {
-	if (use_gs_spectrum_bars)
+	if (spectrum_gs)
 	{
 		init_gs();
 		return shader_gs;
@@ -65,7 +65,7 @@ void Polar::setShaderUniforms() const
 	s.setUniform("angle_span", angle_span);
 	s.setUniform("warping_factor", warping_factor);
 
-	if (use_gs_spectrum_bars)
+	if (spectrum_gs)
 	{
 		s.setUniform("bar_width", spectrum_bar_width);
 		s.setUniform("bottom_y", spectrum_bottom_y);

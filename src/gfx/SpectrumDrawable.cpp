@@ -2,16 +2,15 @@
 #include <avz/gfx/SpectrumDrawable.hpp>
 #include <cassert>
 #include <shader_headers/spectrum_bars.geom.h>
-#include <shader_headers/spectrum_polar.geom.h>
 
 #ifdef LIBAVZ_IMGUI
 #include <imgui.h>
 #endif
 
-static sf::Shader gs, polar_gs;
+static sf::Shader gs;
 static void init_gs()
 {
-	if (gs.getNativeHandle() && polar_gs.getNativeHandle())
+	if (gs.getNativeHandle())
 		return;
 
 	// Pass-through vertex shader to satisfy the linker
@@ -21,24 +20,20 @@ static void init_gs()
 
 	if (!gs.loadFromMemory(vs_src, libavz_shader_spectrum_bars_geom, fs_src))
 		throw std::runtime_error("failed to load spectrum_bars geometry shader");
-	if (!polar_gs.loadFromMemory(vs_src, libavz_shader_spectrum_polar_geom, fs_src))
-		throw std::runtime_error("failed to load spectrum_polar geometry shader");
 }
 
 namespace avz
 {
 
-SpectrumDrawable::SpectrumDrawable(const ColorSettings &color, const bool backwards)
-	: color{color},
-	  backwards{backwards}
+SpectrumDrawable::SpectrumDrawable(const ColorSettings &color)
+	: color{color}
 {
 	vertex_array.setPrimitiveType(sf::PrimitiveType::TriangleStrip);
 }
 
-SpectrumDrawable::SpectrumDrawable(const sf::IntRect &rect, const ColorSettings &color, const bool backwards)
+SpectrumDrawable::SpectrumDrawable(const sf::IntRect &rect, const ColorSettings &color)
 	: rect{rect},
-	  color{color},
-	  backwards{backwards}
+	  color{color}
 {
 	vertex_array.setPrimitiveType(sf::PrimitiveType::TriangleStrip);
 	update_bars();
