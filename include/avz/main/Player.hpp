@@ -21,7 +21,7 @@ public:
 	void start_in_window(const std::string &title);
 	void encode(const std::string &outfile, const std::string &vcodec, const std::string &acodec);
 
-	inline void set_framerate(int framerate)
+	constexpr void set_framerate(int framerate)
 	{
 		if (this->framerate == framerate)
 			return;

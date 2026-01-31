@@ -30,14 +30,14 @@ private:
 
 public:
 	SongMetadataDrawable(sf::Text &title_text, sf::Text &artist_text);
-	inline void set_title(const std::string &title) { title_text.setString(util::utf8_to_sf_string(title)); }
-	inline void set_artist(const std::string &artist) { artist_text.setString(util::utf8_to_sf_string(artist)); }
+	constexpr void set_title(const std::string &title) { title_text.setString(util::utf8_to_sf_string(title)); }
+	constexpr void set_artist(const std::string &artist) { artist_text.setString(util::utf8_to_sf_string(artist)); }
 	void set_album_cover(const sf::Texture &txr, const sf::Vector2f size);
 	void set_position(const sf::Vector2f pos);
-	inline sf::Vector2f get_ac_spr_center() { return ac_spr.get_center(); }
+	constexpr sf::Vector2f get_ac_spr_center() { return ac_spr.get_center(); }
 	void draw(sf::RenderTarget &target, const sf::RenderStates states) const override;
 
-	inline void set_text_pos(const TextPosition tp)
+	constexpr void set_text_pos(const TextPosition tp)
 	{
 		text_pos = tp;
 		update_text_positions();

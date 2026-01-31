@@ -35,33 +35,26 @@ public:
 	SpectrumDrawable(const ColorSettings &color, const bool backwards = false);
 	SpectrumDrawable(const sf::IntRect &rect, const ColorSettings &color, const bool backwards = false);
 
-	inline int get_bar_spacing() const { return bar.spacing; }
-	inline int get_bar_count() const { return bar.count; }
-
-	inline void set_debug_rect(bool b) { debug_rect = b; }
-	inline bool get_debug_rect() const { return debug_rect; }
-
-	inline void set_multiplier(const float multiplier) { this->multiplier = multiplier; }
-	inline float get_multiplier() const { return multiplier; }
-
-	inline void set_use_gs(bool b)
-	{
-		if (use_gs == b)
-			return;
-		use_gs = b;
-		update_bars();
-	}
-	inline bool get_use_gs() const { return use_gs; }
-
-	inline bool get_backwards() const { return backwards; }
-
-	void set_rect(const sf::IntRect &rect);
 	void set_bar_width(const int width);
 	void set_bar_spacing(const int spacing);
-	void set_backwards(const bool b);
+	constexpr int get_bar_width() const { return bar.width; }
+	constexpr int get_bar_spacing() const { return bar.spacing; }
+	constexpr int get_bar_count() const { return bar.count; }
 
-	inline int get_bar_width() const { return bar.width; }
-	inline sf::IntRect get_rect() const { return rect; }
+	constexpr void set_debug_rect(bool b) { debug_rect = b; }
+	constexpr bool get_debug_rect() const { return debug_rect; }
+
+	constexpr void set_multiplier(const float multiplier) { this->multiplier = multiplier; }
+	constexpr float get_multiplier() const { return multiplier; }
+
+	void set_use_gs(bool b);
+	constexpr bool get_use_gs() const { return use_gs; }
+
+	void set_rect(const sf::IntRect &rect);
+	constexpr sf::IntRect get_rect() const { return rect; }
+
+	void set_backwards(const bool b);
+	constexpr bool get_backwards() const { return backwards; }
 
 	void update(std::span<const float> spectrum);
 	void draw(sf::RenderTarget &target, sf::RenderStates states = {}) const override;

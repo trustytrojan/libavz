@@ -75,22 +75,22 @@ public:
 	 * Set frequency bin accumulation method.
 	 * @param am new accumulation method to use
 	 */
-	inline void set_accum_method(AccumulationMethod am) { this->am = am; }
+	constexpr void set_accum_method(AccumulationMethod am) { this->am = am; }
 
 	/**
 	 * Get the current scale.
 	 */
-	inline Scale get_scale() const { return scale; }
+	constexpr Scale get_scale() const { return scale; }
 
 	/**
 	 * Get the current nth root value.
 	 */
-	inline int get_nth_root() const { return nth_root; }
+	constexpr int get_nth_root() const { return nth_root; }
 
 	/**
 	 * Get the current accumulation method.
 	 */
-	inline AccumulationMethod get_accum_method() const { return am; }
+	constexpr AccumulationMethod get_accum_method() const { return am; }
 
 	/**
 	 * Pack frequency bins from input to output spectrum using configured scale and accumulation method.

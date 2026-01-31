@@ -2,15 +2,16 @@
 #include <avz/gfx/SpectrumDrawable.hpp>
 #include <cassert>
 #include <shader_headers/spectrum_bars.geom.h>
+#include <shader_headers/spectrum_polar.geom.h>
 
 #ifdef LIBAVZ_IMGUI
 #include <imgui.h>
 #endif
 
-static sf::Shader gs_shader;
-static void init_gs_shader()
+static sf::Shader gs, polar_gs;
+static void init_gs()
 {
-	if (gs_shader.getNativeHandle())
+	if (gs.getNativeHandle() && polar_gs.getNativeHandle())
 		return;
 
 	// Pass-through vertex shader to satisfy the linker
@@ -18,8 +19,10 @@ static void init_gs_shader()
 		vs_src = "#version 120\nvoid main() { gl_Position = gl_Vertex; gl_FrontColor = gl_Color; }",
 		fs_src = "#version 120\nvoid main() { gl_FragColor = gl_Color; }";
 
-	if (!gs_shader.loadFromMemory(vs_src, libavz_shader_spectrum_bars_geom, fs_src))
-		throw std::runtime_error("failed to load spectrum_bars GS shader");
+	if (!gs.loadFromMemory(vs_src, libavz_shader_spectrum_bars_geom, fs_src))
+		throw std::runtime_error("failed to load spectrum_bars geometry shader");
+	if (!polar_gs.loadFromMemory(vs_src, libavz_shader_spectrum_polar_geom, fs_src))
+		throw std::runtime_error("failed to load spectrum_polar geometry shader");
 }
 
 namespace avz
@@ -70,6 +73,14 @@ void SpectrumDrawable::set_backwards(const bool b)
 	if (backwards == b)
 		return;
 	backwards = b;
+	update_bars();
+}
+
+void SpectrumDrawable::set_use_gs(bool b)
+{
+	if (use_gs == b)
+		return;
+	use_gs = b;
 	update_bars();
 }
 
@@ -132,10 +143,10 @@ void SpectrumDrawable::draw(sf::RenderTarget &target, sf::RenderStates states) c
 		{
 			// ONLY IF there isn't another shader being applied (for example Polar in spectrum mode)
 			// THEN we can insert our GS to generate the bars
-			init_gs_shader();
-			gs_shader.setUniform("bar_width", (float)bar.width);
-			gs_shader.setUniform("bottom_y", (float)(rect.position.y + rect.size.y));
-			states.shader = &gs_shader;
+			init_gs();
+			gs.setUniform("bar_width", (float)bar.width);
+			gs.setUniform("bottom_y", (float)(rect.position.y + rect.size.y));
+			states.shader = &gs;
 		}
 	}
 

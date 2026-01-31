@@ -18,8 +18,8 @@ class Profiler
 		std::string name;
 		float min{std::numeric_limits<float>::max()}, max{}, total{}, current{};
 		size_t count{};
-		inline float avg() const { return (count == 0) ? 0.0f : total / count; }
-		inline operator std::string() const
+		constexpr float avg() const { return (count == 0) ? 0.0f : total / count; }
+		constexpr operator std::string() const
 		{
 			return std::format("{:<20}{:<7.3f}{:<7.3f}{:<7.3f}{:<7.3f}\n", name, current, avg(), min, max);
 		}
@@ -30,13 +30,13 @@ class Profiler
 	std::stack<std::string> current_sections;
 
 public:
-	inline void startSection(std::string_view name)
+	constexpr void startSection(std::string_view name)
 	{
 		current_sections.emplace(name);
 		current_clocks.emplace();
 	}
 
-	inline void endSection()
+	constexpr void endSection()
 	{
 		auto &clock = current_clocks.top();
 		clock.stop();
@@ -56,13 +56,13 @@ public:
 		stat.count++;
 	}
 
-	inline void endStartSection(std::string_view name)
+	constexpr void endStartSection(std::string_view name)
 	{
 		endSection();
 		startSection(name);
 	}
 
-	inline std::string getSummary()
+	constexpr std::string getSummary()
 	{
 		auto s = std::format("{:<20}{:<7}{:<7}{:<7}{:<7}\n", "", "curr", "avg", "min", "max");
 		for (const auto &stat : stats)

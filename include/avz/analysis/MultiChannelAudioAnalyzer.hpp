@@ -45,7 +45,7 @@ public:
 	/**
 	 * Get number of channels.
 	 */
-	inline int get_num_channels() const { return num_channels; }
+	constexpr int get_num_channels() const { return num_channels; }
 
 	/**
 	 * Average peak frequency across all channels (useful for stereo->mono reduction).

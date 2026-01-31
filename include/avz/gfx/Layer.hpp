@@ -22,13 +22,13 @@ class Layer
 	std::vector<DrawCall> draws;
 
 public:
-	inline Layer(const std::string &name)
+	constexpr Layer(const std::string &name)
 		: name{name}
 	{
 	}
 
-	inline const std::string &get_name() const { return name; }
-	inline void add_draw(DrawCall dc) { draws.emplace_back(dc); }
+	constexpr const std::string &get_name() const { return name; }
+	constexpr void add_draw(DrawCall dc) { draws.emplace_back(dc); }
 
 	virtual void render(sf::RenderTarget &target);
 };

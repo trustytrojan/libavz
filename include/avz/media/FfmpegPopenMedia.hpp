@@ -37,13 +37,13 @@ public:
 	size_t read_audio_samples(float *buf, int samples) override;
 	bool read_video_frame(std::vector<std::byte> &buf) override;
 
-	inline int audio_sample_rate() const override { return metadata.getAudioSampleRate(); }
-	inline int audio_channels() const override { return metadata.getAudioChannels(); }
-	inline bool has_video_stream() const override { return metadata.hasVideoStream(); }
-	inline int video_framerate() const override { return metadata.getVideoFramerate(); }
-	inline std::string title() const override { return metadata.getTitle(); }
-	inline std::string artist() const override { return metadata.getArtist(); }
-	inline const std::optional<std::vector<std::byte>> &attached_pic() const override { return _attached_pic; }
+	constexpr int audio_sample_rate() const override { return metadata.getAudioSampleRate(); }
+	constexpr int audio_channels() const override { return metadata.getAudioChannels(); }
+	constexpr bool has_video_stream() const override { return metadata.hasVideoStream(); }
+	constexpr int video_framerate() const override { return metadata.getVideoFramerate(); }
+	constexpr std::string title() const override { return metadata.getTitle(); }
+	constexpr std::string artist() const override { return metadata.getArtist(); }
+	constexpr const std::optional<std::vector<std::byte>> &attached_pic() const override { return _attached_pic; }
 };
 
 } // namespace avz

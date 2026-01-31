@@ -48,14 +48,14 @@ public:
 	 * @throws `std::invalid_argument` if `fft_size` is not even
 	 */
 	void set_fft_size(int fft_size);
-	inline constexpr int get_fft_size() const { return fft_size; }
+	constexpr int get_fft_size() const { return fft_size; }
 
 	/**
 	 * Set window function.
 	 * @param wf new window function to use
 	 */
 	void set_window_func(WindowFunction wf);
-	inline constexpr WindowFunction get_window_func() const { return window_func; }
+	constexpr WindowFunction get_window_func() const { return window_func; }
 
 	/**
 	 * Copies the `wavedata` to the FFT processor for rendering.
@@ -63,8 +63,8 @@ public:
 	 */
 	void copy_to_input(std::span<const float> wavedata);
 
-	inline constexpr void execute_fft() const { fftw.execute(); }
-	inline constexpr std::span<const std::complex<float>> get_output() const { return fftw.output(); }
+	constexpr void execute_fft() const { fftw.execute(); }
+	constexpr std::span<const std::complex<float>> get_output() const { return fftw.output(); }
 
 #ifdef LIBAVZ_IMGUI
 	/**

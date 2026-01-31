@@ -12,17 +12,17 @@ namespace avz
 class RenderTexture : public sf::RenderTexture
 {
 public:
-	inline RenderTexture()
+	constexpr RenderTexture()
 		: sf::RenderTexture{}
 	{
 	}
 
-	inline RenderTexture(const sf::Vector2u size, unsigned antialiasing = 0)
+	constexpr RenderTexture(const sf::Vector2u size, unsigned antialiasing = 0)
 		: sf::RenderTexture{size, {.antiAliasingLevel = antialiasing}}
 	{
 	}
 
-	inline operator Sprite() const { return getTexture(); }
+	constexpr operator Sprite() const { return getTexture(); }
 };
 
 } // namespace avz

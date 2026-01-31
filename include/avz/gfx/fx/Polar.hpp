@@ -25,7 +25,7 @@ struct Polar : TransformEffect
 	virtual const sf::Shader &getShader() const override;
 	virtual void setShaderUniforms() const override;
 
-	inline void set_gs_spectrum_bars(const SpectrumDrawable *const spectrum = {})
+	constexpr void set_gs_spectrum_bars(const SpectrumDrawable *const spectrum = {})
 	{
 		use_gs_spectrum_bars = spectrum;
 		spectrum_bar_width = spectrum->get_bar_width();

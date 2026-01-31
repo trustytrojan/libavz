@@ -50,7 +50,7 @@ public:
 	 * The underlying tk::spline values are not guaranteed to be consecutive,
 	 * so the UI must use a compact 0-based index space.
 	 */
-	inline static int interp_type_to_index(InterpolationType t)
+	constexpr static int interp_type_to_index(InterpolationType t)
 	{
 		switch (t)
 		{
@@ -65,7 +65,7 @@ public:
 		}
 	}
 
-	inline static InterpolationType interp_type_from_index(int idx)
+	constexpr static InterpolationType interp_type_from_index(int idx)
 	{
 		switch (idx)
 		{
@@ -78,8 +78,8 @@ public:
 		}
 	}
 
-	inline int get_interp_type_index() const { return interp_type_to_index(type); }
-	inline void set_interp_type_index(int idx) { set_interp_type(interp_type_from_index(idx)); }
+	constexpr int get_interp_type_index() const { return interp_type_to_index(type); }
+	constexpr void set_interp_type_index(int idx) { set_interp_type(interp_type_from_index(idx)); }
 
 	/**
 	 * Interpolate spectrum data to fill gaps between non-zero values.
@@ -100,7 +100,7 @@ public:
 	 * @param x X coordinate (index)
 	 * @return interpolated value
 	 */
-	inline float sample(float x) const { return spline(x); }
+	constexpr float sample(float x) const { return spline(x); }
 
 #ifdef LIBAVZ_IMGUI
 	/**

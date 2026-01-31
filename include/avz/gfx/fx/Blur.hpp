@@ -23,7 +23,7 @@ public:
 	Blur(float hrad, float vrad, int n_passes);
 
 	void apply(RenderTexture &rt) const override;
-	inline void setRtSize(sf::Vector2u size) override { rt2 = {size}; }
+	constexpr void setRtSize(sf::Vector2u size) override { rt2 = {size}; }
 };
 
 } // namespace avz::fx

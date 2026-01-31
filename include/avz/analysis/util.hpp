@@ -6,12 +6,12 @@
 namespace avz::util
 {
 
-inline constexpr int bin_index_from_freq(const int freq_hz, const int sample_rate_hz, const int bin_count)
+constexpr int bin_index_from_freq(const int freq_hz, const int sample_rate_hz, const int bin_count)
 {
 	return freq_hz * bin_count / sample_rate_hz;
 }
 
-inline constexpr int freq_from_bin_index(const int bin_index, const int sample_rate_hz, const int bin_count)
+constexpr int freq_from_bin_index(const int bin_index, const int sample_rate_hz, const int bin_count)
 {
 	return bin_index * sample_rate_hz / bin_count;
 }

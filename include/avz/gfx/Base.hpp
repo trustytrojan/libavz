@@ -75,8 +75,8 @@ public:
 
 	void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
-	inline void set_font(const std::string &path) { font = sf::Font{path}; }
-	inline void set_profiler_enabled(bool b) { profiler_enabled = b; }
+	constexpr void set_font(const std::string &path) { font = sf::Font{path}; }
+	constexpr void set_profiler_enabled(bool b) { profiler_enabled = b; }
 
 	/**
 	 * Returns the number of audio frames requested by this visualizer.

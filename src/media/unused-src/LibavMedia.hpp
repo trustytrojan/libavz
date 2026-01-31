@@ -26,7 +26,7 @@ class LibavMedia : public Media
 
 public:
 	LibavMedia(const std::string &url, sf::Vector2u vsize);
-	inline size_t read_audio_samples(float *buf, int samples) override { return 0; }
+	constexpr size_t read_audio_samples(float *buf, int samples) override { return 0; }
 	bool read_video_frame(sf::Texture &txr) override;
 	void decode_audio(int audio_frames) override;
 };

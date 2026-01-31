@@ -18,7 +18,7 @@ public:
 	Mirror(int mirror_side = 0);
 
 	void apply(RenderTexture &rt) const override;
-	inline void setRtSize(sf::Vector2u size) override { rt2 = {size}; }
+	constexpr void setRtSize(sf::Vector2u size) override { rt2 = {size}; }
 };
 
 } // namespace avz::fx

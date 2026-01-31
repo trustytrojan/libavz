@@ -15,8 +15,8 @@ private:
 	struct fftwf_allocator
 	{
 		using value_type = T;
-		inline T *allocate(const size_t n) { return (T *)fftwf_malloc(n * sizeof(T)); }
-		inline void deallocate(T *const p, size_t) { fftwf_free(p); }
+		constexpr T *allocate(const size_t n) { return (T *)fftwf_malloc(n * sizeof(T)); }
+		constexpr void deallocate(T *const p, size_t) { fftwf_free(p); }
 	};
 
 	template <typename T>
@@ -26,7 +26,7 @@ private:
 	Vector<std::complex<float>> out;
 	fftwf_plan plan{};
 
-	inline void cleanup()
+	constexpr void cleanup()
 	{
 		if (!plan)
 			return;
@@ -35,9 +35,9 @@ private:
 	}
 
 public:
-	inline constexpr ~fftwf_dft_r2c_1d() { cleanup(); }
+	constexpr ~fftwf_dft_r2c_1d() { cleanup(); }
 
-	inline constexpr void set_n(const int n)
+	constexpr void set_n(const int n)
 	{
 		in.resize(n);
 		out.resize(n / 2 + 1);
@@ -45,9 +45,9 @@ public:
 		plan = fftwf_plan_dft_r2c_1d(n, in.data(), (fftwf_complex *)out.data(), FFTW_ESTIMATE);
 	}
 
-	inline constexpr void execute() const { fftwf_execute(plan); }
-	inline constexpr std::span<float> input() { return in; }
-	inline constexpr std::span<const std::complex<float>> output() const { return out; }
+	constexpr void execute() const { fftwf_execute(plan); }
+	constexpr std::span<float> input() { return in; }
+	constexpr std::span<const std::complex<float>> output() const { return out; }
 };
 
 } // namespace avz

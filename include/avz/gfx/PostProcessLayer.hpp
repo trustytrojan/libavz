@@ -45,7 +45,7 @@ public:
 	 * By default, the "effects" callback simply draws the "effects" render-texture to the
 	 * `target` passed to `full_lifecycle`.
 	 */
-	inline void set_fx_cb(const FxCb &cb) { fx_cb = cb; }
+	constexpr void set_fx_cb(const FxCb &cb) { fx_cb = cb; }
 
 	/**
 	 * Runs the "full lifecycle" of the layer:

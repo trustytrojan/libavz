@@ -9,7 +9,7 @@
 
 // clang-format off
 #define EXAMPLE_ARGS_GETTER(type, name, arg_str) \
-	inline constexpr type get_##name() const { return get<type>(arg_str); }
+	constexpr type get_##name() const { return get<type>(arg_str); }
 // clang-format on
 
 namespace avz::examples
@@ -19,7 +19,7 @@ struct Args : argparse::ArgumentParser
 {
 	Args(int argc, const char *const *argv, float default_audio_duration = 0.25f, bool auto_parse = true);
 
-	inline constexpr void parse(int argc, const char *const *argv)
+	constexpr void parse(int argc, const char *const *argv)
 	{
 		try
 		{
@@ -32,7 +32,7 @@ struct Args : argparse::ArgumentParser
 		}
 	}
 
-	inline constexpr sf::Vector2u get_size() const
+	constexpr sf::Vector2u get_size() const
 	{
 		const auto &size_args = get<std::vector<unsigned>>("--size");
 		return {size_args[0], size_args[1]};
