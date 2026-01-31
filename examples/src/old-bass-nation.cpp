@@ -13,7 +13,6 @@ struct OldBassNation : ExampleBase
 	const int fft_size;
 
 	std::vector<std::unique_ptr<BassNationSpectrumLayer>> spectrums;
-	avz::ColorSettings cs;
 	std::vector<std::future<void>> futures;
 
 	// calculate the FFT amplitudes array indices of min/max frequencies in Hz
@@ -48,8 +47,6 @@ struct OldBassNation : ExampleBase
 		auto &particles_layer = emplace_layer<avz::PostProcessLayer>("particles", size);
 		particles_layer.add_draw({ps, &ps_polar});
 
-		cs.set_mode(avz::ColorSettings::Mode::SOLID);
-
 		static const std::array<sf::Color, 9> colors{
 			sf::Color::Green,
 			sf::Color::Cyan,
@@ -73,15 +70,13 @@ struct OldBassNation : ExampleBase
 			const auto new_duration_sec = args.get_audio_duration_sec() - duration_diff;
 			const int new_fft_size = new_duration_sec * sample_rate_hz;
 
-			cs.set_solid_color(colors[i]);
-
 			auto &left_layer = *spectrums.emplace_back(
-				std::make_unique<BassNationSpectrumLayer>(new_fft_size, sample_rate_hz, size, cs, true));
+				std::make_unique<BassNationSpectrumLayer>(i + 1, new_fft_size, sample_rate_hz, size, colors[i], true));
 			left_layer.configure_spectrum(false, size);
 			left_layer.spectrum.set_use_gs(args.get_geometry_shader_enabled());
 
 			auto &right_layer = *spectrums.emplace_back(
-				std::make_unique<BassNationSpectrumLayer>(new_fft_size, sample_rate_hz, size, cs, false));
+				std::make_unique<BassNationSpectrumLayer>(i + 1, new_fft_size, sample_rate_hz, size, colors[i], false));
 			right_layer.configure_spectrum(true, size);
 			right_layer.spectrum.set_use_gs(args.get_geometry_shader_enabled());
 
@@ -99,6 +94,8 @@ struct OldBassNation : ExampleBase
 
 		futures.resize(spectrums.size());
 	}
+
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
 
 	void update(std::span<const float> audio_buffer) override
 	{
@@ -132,5 +129,4 @@ struct OldBassNation : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	OldBassNation, "Multi-spectrum polar visualization with bass frequencies (old version)", 0.25f, viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN(OldBassNation, "Multi-spectrum polar visualization with bass frequencies (old version)", 0.25f)

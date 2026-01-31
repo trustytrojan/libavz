@@ -70,12 +70,12 @@ void Interpolator::set_values(std::span<const float> values)
 #ifdef LIBAVZ_IMGUI
 void avz::Interpolator::imgui()
 {
-	if (ImGui::CollapsingHeader("Interpolator"))
-	{
-		const char *modes[] = {"Linear", "Cubic (cspline)", "Cubic (hermite)"};
-		int it = get_interp_type_index();
-		if (ImGui::Combo("Type", &it, modes, IM_ARRAYSIZE(modes)))
-			set_interp_type_index(it);
-	}
+	if (!ImGui::CollapsingHeader(imgui_header.c_str()))
+		return;
+
+	const char *modes[] = {"Linear", "Cubic (cspline)", "Cubic (hermite)"};
+	int it = get_interp_type_index();
+	if (ImGui::Combo("Type", &it, modes, IM_ARRAYSIZE(modes)))
+		set_interp_type_index(it);
 }
 #endif

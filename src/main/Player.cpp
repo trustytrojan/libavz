@@ -15,11 +15,10 @@
 namespace avz
 {
 
-Player::Player(Base &viz, Media &media, int framerate, int audio_frames_needed)
+Player::Player(Base &viz, Media &media, int framerate)
 	: viz{viz},
 	  media{media},
-	  framerate{framerate},
-	  audio_frames_needed{audio_frames_needed}
+	  framerate{framerate}
 {
 }
 
@@ -149,7 +148,7 @@ void Player::start_in_window(const std::string &title)
 		ImGui::End();
 #endif
 
-		const auto frames = std::max(audio_frames_needed, afpvf);
+		const auto frames = std::max(viz.get_audio_frames_needed(), afpvf);
 		const auto audio = media.read_audio(frames);
 
 		if (!audio)
@@ -203,7 +202,7 @@ void Player::encode(const std::string &outfile, const std::string &vcodec, const
 	FfmpegPopenEncoder ffmpeg{media.url, viz.size.x, viz.size.y, framerate, outfile, vcodec, acodec};
 	while (true)
 	{
-		const auto frames = std::max(audio_frames_needed, afpvf);
+		const auto frames = std::max(viz.get_audio_frames_needed(), afpvf);
 		const auto audio = media.read_audio(frames);
 
 		if (!audio)

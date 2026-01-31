@@ -1,5 +1,6 @@
 #pragma once
 
+#include "avz/gfx/ColorSettings.hpp"
 #include <avz/analysis.hpp>
 #include <avz/gfx.hpp>
 #include <avz/media.hpp>
@@ -18,19 +19,31 @@ struct BassNationSpectrumLayer
 	avz::AudioAnalyzer aa;
 	avz::Interpolator ip;
 	std::vector<float> s, a;
+	avz::ColorSettings cs;
 	avz::SpectrumDrawable spectrum;
 	bool is_left;
 	int sample_rate;
+	int spectrum_number;
 
-	BassNationSpectrumLayer(int fft_size, int sample_rate, sf::Vector2u size, const avz::ColorSettings &cs, bool left);
+	BassNationSpectrumLayer(
+		int spectrum_number, int fft_size, int sample_rate, sf::Vector2u size, sf::Color color, bool left);
 	~BassNationSpectrumLayer();
 
 	void compute(std::span<const float> audio_buffer);
 	std::future<void> trigger_work(std::span<const float> audio_buffer);
 	void configure_spectrum(bool prev, sf::Vector2u size);
 
+#ifdef LIBAVZ_IMGUI
+	void imgui();
+#endif
+
 private:
 	void worker_loop();
+
+#ifdef LIBAVZ_IMGUI
+	std::string imgui_header{
+		std::format("BassNationSpectrumLayer {} #{}", is_left ? "Left" : "Right", spectrum_number)};
+#endif
 
 	// worker state
 	std::thread worker;

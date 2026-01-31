@@ -28,6 +28,8 @@ struct ShakeBassTest : ExampleBase
 		emplace_layer<avz::Layer>("shake").add_draw({rect, &shake});
 	}
 
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
+
 	void update(std::span<const float> audio_buffer) override
 	{
 		capture_time("fft", sa.execute_fft(fa, audio_buffer));
@@ -48,4 +50,4 @@ struct ShakeBassTest : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(ShakeBassTest, "Shake effect visualization based on bass frequencies", 0.25f, viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN(ShakeBassTest, "Shake effect visualization based on bass frequencies", 0.25f)

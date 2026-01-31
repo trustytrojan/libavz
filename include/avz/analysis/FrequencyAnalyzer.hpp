@@ -30,6 +30,10 @@ private:
 	WindowFunction window_func{WindowFunction::Hanning};
 	std::vector<float> window_values;
 
+#ifdef LIBAVZ_IMGUI
+	std::string imgui_header{std::format("FrequencyAnalyzer @ {}", (void *)this)};
+#endif
+
 public:
 	/**
 	 * Initialize frequency spectrum renderer.
@@ -51,7 +55,7 @@ public:
 	 * @param wf new window function to use
 	 */
 	void set_window_func(WindowFunction wf);
-	inline WindowFunction get_window_func() const { return window_func; }
+	inline constexpr WindowFunction get_window_func() const { return window_func; }
 
 	/**
 	 * Copies the `wavedata` to the FFT processor for rendering.

@@ -78,6 +78,15 @@ public:
 	inline void set_font(const std::string &path) { font = sf::Font{path}; }
 	inline void set_profiler_enabled(bool b) { profiler_enabled = b; }
 
+	/**
+	 * Returns the number of audio frames requested by this visualizer.
+	 * For example: request as much as you are analyzing with FFT,
+	 * or as much as a `ScopeDrawable` needs to visualize.
+	 * @returns 0 by default; subclasses should override to specify their needs.
+	 * This is called by `Player` if you use it for playback.
+	 */
+	virtual int get_audio_frames_needed() { return 0; }
+
 protected:
 	virtual void update(std::span<const float> audio_buffer) {}
 };

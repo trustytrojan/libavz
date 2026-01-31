@@ -11,13 +11,12 @@ class Player
 	Base &viz;
 	Media &media;
 	int framerate;
-	int audio_frames_needed; // usually needed for FFT
 
 	// audio frames per video frame
 	int afpvf{media.audio_sample_rate() / framerate};
 
 public:
-	Player(Base &viz, Media &media, int framerate, int audio_frames_needed);
+	Player(Base &viz, Media &media, int framerate);
 
 	void start_in_window(const std::string &title);
 	void encode(const std::string &outfile, const std::string &vcodec, const std::string &acodec);

@@ -13,7 +13,6 @@ struct MirroredBassNation : ExampleBase
 	const int fft_size;
 
 	std::vector<std::unique_ptr<BassNationSpectrumLayer>> spectrums;
-	avz::ColorSettings cs;
 	std::vector<std::future<void>> futures;
 
 	// calculate the FFT amplitudes array indices of min/max frequencies in Hz
@@ -46,8 +45,6 @@ struct MirroredBassNation : ExampleBase
 		particles_layer.add_draw({ps, &ps_polar});
 		particles_layer.add_effect(&mirror_l2r);
 
-		cs.set_mode(avz::ColorSettings::Mode::SOLID);
-
 		static const std::array<sf::Color, 9> colors{
 			sf::Color::Green,
 			sf::Color::Cyan,
@@ -71,10 +68,8 @@ struct MirroredBassNation : ExampleBase
 			const auto new_duration_sec = args.get_audio_duration_sec() - duration_diff;
 			const int new_fft_size = new_duration_sec * sample_rate_hz;
 
-			cs.set_solid_color(colors[i]);
-
 			auto &spectrum = *spectrums.emplace_back(
-				std::make_unique<BassNationSpectrumLayer>(new_fft_size, sample_rate_hz, size, cs, true));
+				std::make_unique<BassNationSpectrumLayer>(i + 1, new_fft_size, sample_rate_hz, size, colors[i], true));
 			spectrum.spectrum.set_use_gs(args.get_geometry_shader_enabled());
 			spectrum.configure_spectrum(false, size);
 
@@ -91,6 +86,8 @@ struct MirroredBassNation : ExampleBase
 
 		futures.resize(spectrums.size());
 	}
+
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
 
 	void update(std::span<const float> audio_buffer) override
 	{
@@ -122,8 +119,11 @@ struct MirroredBassNation : ExampleBase
 
 		// wait for all spectrums to finish updating
 		std::ranges::for_each(futures, &std::future<void>::wait);
+
+#ifdef LIBAVZ_IMGUI
+		std::ranges::for_each(spectrums, &BassNationSpectrumLayer::imgui);
+#endif
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	MirroredBassNation, "Mirrored multi-spectrum polar visualization with bass frequencies", 0.25f, viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN(MirroredBassNation, "Mirrored multi-spectrum polar visualization with bass frequencies", 0.25f)

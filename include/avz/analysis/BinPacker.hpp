@@ -1,7 +1,10 @@
 #pragma once
 
+#include <format>
 #include <span>
+#include <string>
 #include <vector>
+
 
 namespace avz
 {
@@ -47,6 +50,10 @@ private:
 	// state for bin packing
 	int bin_pack_input_size{};
 	std::vector<std::pair<int, int>> bin_pack_index_mapping;
+
+#ifdef LIBAVZ_IMGUI
+	std::string imgui_header{std::format("BinPacker @ {}", (void *)this)};
+#endif
 
 public:
 	BinPacker() = default;

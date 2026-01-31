@@ -27,6 +27,10 @@ class SpectrumDrawable : public sf::Drawable
 		int width{10}, spacing{5}, count{};
 	} bar;
 
+#ifdef LIBAVZ_IMGUI
+	std::string imgui_header{std::format("SpectrumDrawable @ {}", (void *)this)};
+#endif
+
 public:
 	SpectrumDrawable(const ColorSettings &color, const bool backwards = false);
 	SpectrumDrawable(const sf::IntRect &rect, const ColorSettings &color, const bool backwards = false);

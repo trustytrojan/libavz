@@ -110,22 +110,22 @@ void BinPacker::compute_bin_pack_index_mappings(const size_t out_size, const siz
 #ifdef LIBAVZ_IMGUI
 void avz::BinPacker::imgui()
 {
-	if (ImGui::CollapsingHeader("BinPacker"))
+	if (!ImGui::CollapsingHeader(imgui_header.c_str()))
+		return;
+
+	const char *scales[] = {"Linear", "Log", "Nth root"};
+	int scale_idx = static_cast<int>(scale);
+	if (ImGui::Combo("Scale", &scale_idx, scales, IM_ARRAYSIZE(scales)))
+		set_scale(static_cast<Scale>(scale_idx));
+
+	if (scale == Scale::NTH_ROOT)
 	{
-		const char *scales[] = {"Linear", "Log", "Nth root"};
-		int scale_idx = static_cast<int>(scale);
-		if (ImGui::Combo("Scale", &scale_idx, scales, IM_ARRAYSIZE(scales)))
-			set_scale(static_cast<Scale>(scale_idx));
-
-		if (scale == Scale::NTH_ROOT)
-		{
-			int nth = nth_root;
-			if (ImGui::SliderInt("Nth root", &nth, 2, 16))
-				set_nth_root(nth);
-		}
-
-		const char *accum[] = {"Sum", "Max"};
-		ImGui::Combo("Accumulation", (int *)&am, accum, IM_ARRAYSIZE(accum));
+		int nth = nth_root;
+		if (ImGui::SliderInt("Nth root", &nth, 2, 16))
+			set_nth_root(nth);
 	}
+
+	const char *accum[] = {"Sum", "Max"};
+	ImGui::Combo("Accumulation", (int *)&am, accum, IM_ARRAYSIZE(accum));
 }
 #endif

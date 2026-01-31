@@ -41,6 +41,8 @@ struct StereoPolarSpectrum : ExampleBase
 		spectrum_layer.add_draw({spectrum_right, &polar_right});
 	}
 
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
+
 	void update(std::span<const float> audio_buffer) override
 	{
 		auto process_channel = [&](bool backwards, int channel, avz::SpectrumDrawable &spectrum)
@@ -62,5 +64,4 @@ struct StereoPolarSpectrum : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	StereoPolarSpectrum, "Stereo polar spectrum visualization with left and right channels", 0.25f, viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN(StereoPolarSpectrum, "Stereo polar spectrum visualization with left and right channels", 0.25f)

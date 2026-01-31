@@ -39,6 +39,8 @@ struct PolarParticleSystem : ExampleBase
 		emplace_layer<avz::Layer>("particles").add_draw({ps, &polar});
 	}
 
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
+
 	void update(std::span<const float> audio_buffer) override
 	{
 		// make sure we can fit one channel of audio
@@ -73,8 +75,5 @@ struct PolarParticleSystem : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	PolarParticleSystem,
-	"Particle system with bass frequencies boosting particles in polar coordinates",
-	0.25f,
-	viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN(
+	PolarParticleSystem, "Particle system with bass frequencies boosting particles in polar coordinates", 0.25f)

@@ -82,6 +82,8 @@ struct ParticleSystemExample : ExampleBase
 		emplace_layer<avz::Layer>("particles").add_draw({ps});
 	}
 
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
+
 	void update(std::span<const float> audio_buffer) override
 	{
 		// make sure we can fit one channel of audio
@@ -121,6 +123,6 @@ int main(int argc, const char *const *argv)
 	ParticleSystemExampleArgs args{argc, argv, 0.25f};
 	ParticleSystemExample viz{args};
 	int audio_frames = viz.fft_size;
-	avz::Player{viz, viz.media, (int)args.get_framerate(), audio_frames}.start_in_window("ParticleSystemExample");
+	avz::Player{viz, viz.media, (int)args.get_framerate()}.start_in_window("ParticleSystemExample");
 	return EXIT_SUCCESS;
 }

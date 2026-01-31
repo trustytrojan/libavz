@@ -1,15 +1,20 @@
 #include "BassNationSpectrumLayer.hpp"
+#include "avz/gfx/ColorSettings.hpp"
+#include "imgui.h"
 
 namespace avz::examples
 {
 
 BassNationSpectrumLayer::BassNationSpectrumLayer(
-	int fft_size, int sample_rate, sf::Vector2u size, const avz::ColorSettings &cs, bool left)
-	: fa{fft_size},
+	int spectrum_number, int fft_size, int sample_rate, sf::Vector2u size, sf::Color color, bool left)
+	: spectrum_number{spectrum_number},
+	  fa{fft_size},
 	  spectrum{{{}, (sf::Vector2i)size}, cs},
 	  is_left(left),
 	  sample_rate(sample_rate)
 {
+	cs.set_mode(avz::ColorSettings::Mode::SOLID);
+	cs.set_solid_color(color);
 	a.resize(fft_size);
 	fa.set_window_func(avz::FrequencyAnalyzer::WindowFunction::Blackman);
 	worker = std::thread{&BassNationSpectrumLayer::worker_loop, this};
@@ -93,5 +98,39 @@ void BassNationSpectrumLayer::worker_loop()
 		}
 	}
 }
+
+#ifdef LIBAVZ_IMGUI
+struct ScopedCollapsingHeader
+{
+	bool open;
+	ScopedCollapsingHeader(const char *label, ImGuiTreeNodeFlags flags = 0, float indent = -1.0f)
+		: open(ImGui::CollapsingHeader(label, flags))
+	{
+		if (open)
+		{
+			if (indent < 0.0f)
+				indent = ImGui::GetStyle().IndentSpacing;
+			ImGui::Indent(indent);
+		}
+	}
+	~ScopedCollapsingHeader()
+	{
+		if (open)
+			ImGui::Unindent();
+	}
+	explicit operator bool() const noexcept { return open; }
+};
+
+void BassNationSpectrumLayer::imgui()
+{
+	ScopedCollapsingHeader header(imgui_header.c_str());
+	if (!header)
+		return;
+	spectrum.imgui();
+	fa.imgui();
+	ip.imgui();
+	cs.imgui();
+}
+#endif
 
 } // namespace avz::examples

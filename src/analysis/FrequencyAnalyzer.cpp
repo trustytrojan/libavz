@@ -88,21 +88,21 @@ void FrequencyAnalyzer::apply_blackman_window()
 #ifdef LIBAVZ_IMGUI
 void avz::FrequencyAnalyzer::imgui()
 {
-	if (ImGui::CollapsingHeader("Frequency Analyzer"))
-	{
-		const char *wfr[] = {"None", "Hanning", "Hamming", "Blackman"};
-		int wf = static_cast<int>(window_func);
-		if (ImGui::Combo("Window", &wf, wfr, IM_ARRAYSIZE(wfr)))
-			set_window_func(static_cast<WindowFunction>(wf));
+	if (!ImGui::CollapsingHeader(imgui_header.c_str()))
+		return;
 
-		int fftsz = fft_size;
-		if (ImGui::InputInt("FFT size", &fftsz, 256, 1024))
-		{
-			fftsz = std::max(2, (fftsz / 2) * 2); // make even and >= 2
-			if (fftsz != fft_size)
-				set_fft_size(fftsz);
-		}
-		ImGui::Text("(changing FFT size will resize internal buffers)");
+	const char *wfr[] = {"None", "Hanning", "Hamming", "Blackman"};
+	int wf = static_cast<int>(window_func);
+	if (ImGui::Combo("Window", &wf, wfr, IM_ARRAYSIZE(wfr)))
+		set_window_func(static_cast<WindowFunction>(wf));
+
+	int fftsz = fft_size;
+	if (ImGui::InputInt("FFT size", &fftsz, 256, 1024))
+	{
+		fftsz = std::max(2, (fftsz / 2) * 2); // make even and >= 2
+		if (fftsz != fft_size)
+			set_fft_size(fftsz);
 	}
+	ImGui::Text("(changing FFT size will resize internal buffers)");
 }
 #endif

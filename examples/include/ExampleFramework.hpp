@@ -66,14 +66,13 @@ public:
 /**
  * @brief Alternative main function helper that allows custom audio frame calculation
  */
-#define LIBAVZ_EXAMPLE_MAIN_CUSTOM(VizClass, description, default_audio_duration, audio_frames_expr)     \
-	int main(int argc, const char *const *argv)                                                          \
-	{                                                                                                    \
-		avz::examples::Args args{argc, argv, default_audio_duration};                                    \
-		VizClass viz{args};                                                                              \
-		int audio_frames = (audio_frames_expr);                                                          \
-		avz::Player{viz, viz.media, (int)args.get_framerate(), audio_frames}.start_in_window(#VizClass); \
-		return EXIT_SUCCESS;                                                                             \
+#define LIBAVZ_EXAMPLE_MAIN(VizClass, description, default_audio_duration)                 \
+	int main(int argc, const char *const *argv)                                            \
+	{                                                                                      \
+		avz::examples::Args args{argc, argv, default_audio_duration};                      \
+		VizClass viz{args};                                                                \
+		avz::Player{viz, viz.media, (int)args.get_framerate()}.start_in_window(#VizClass); \
+		return EXIT_SUCCESS;                                                               \
 	}
 
 } // namespace avz::examples

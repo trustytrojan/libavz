@@ -8,6 +8,7 @@ using namespace avz::examples;
 
 struct Scope : ExampleBase
 {
+	const Args &args;
 	avz::ColorSettings color;
 	avz::ScopeDrawable scope;
 	std::vector<float> mono;
@@ -15,6 +16,7 @@ struct Scope : ExampleBase
 
 	Scope(const Args &args)
 		: ExampleBase{args},
+		  args{args},
 		  scope{{{10, 10}, {(int)size.x - 20, (int)size.y - 20}}, color},
 		  required_frames{std::max(1, (int)std::round(args.get_audio_duration_sec() * sample_rate_hz))}
 	{
@@ -32,6 +34,8 @@ struct Scope : ExampleBase
 		layer.add_draw({scope});
 	}
 
+	int get_audio_frames_needed() override { return std::round(args.get_audio_duration_sec() * sample_rate_hz); }
+
 	void update(std::span<const float> audio_buffer) override
 	{
 		if (num_channels > 1)
@@ -47,8 +51,4 @@ struct Scope : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	Scope,
-	"Audio oscilloscope visualization",
-	0.02f,
-	std::max(1, (int)std::round(args.get_audio_duration_sec() *viz.sample_rate_hz)))
+LIBAVZ_EXAMPLE_MAIN(Scope, "Audio oscilloscope visualization", 0.02f)

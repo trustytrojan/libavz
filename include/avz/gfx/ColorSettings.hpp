@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <print>
 
 namespace avz
 {
@@ -16,15 +17,15 @@ public:
 		SOLID
 	};
 
-	Mode mode = Mode::WHEEL;
+	Mode mode{Mode::WHEEL};
 	sf::Color solid{255, 255, 255};
 	class
 	{
 		friend ColorSettings;
-		float time = 0;
+		float time{};
 
 	public:
-		float rate = 0;
+		float rate{};
 		sf::Vector3f hsv{0.9, 0.7, 1}, start_hsv{0.9, 0.7, 1}, end_hsv{.5, .2, 1};
 		inline void increment_time() { time += rate; }
 	} wheel;
@@ -47,6 +48,9 @@ public:
 	 * Render ImGui controls for color settings.
 	 */
 	void imgui();
+
+private:
+	std::string imgui_header{std::format("ColorSettings @ {}", (void *)this)};
 #endif
 };
 

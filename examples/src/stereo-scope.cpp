@@ -45,6 +45,8 @@ struct StereoScopeViz : ExampleBase
 		layer.add_draw({right_scope});
 	}
 
+	int get_audio_frames_needed() override { return required_frames; }
+
 	void update(std::span<const float> audio_buffer) override
 	{
 		if (num_channels > 1)
@@ -63,8 +65,5 @@ struct StereoScopeViz : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	StereoScopeViz,
-	"Stereo oscilloscope visualization with left (red) and right (cyan) channels",
-	0.02f,
-	viz.required_frames)
+LIBAVZ_EXAMPLE_MAIN(
+	StereoScopeViz, "Stereo oscilloscope visualization with left (red) and right (cyan) channels", 0.02f)

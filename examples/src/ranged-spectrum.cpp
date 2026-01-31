@@ -30,6 +30,8 @@ struct RangedSpectrum : ExampleBase
 		emplace_layer<avz::Layer>("spectrum").add_draw({spectrum});
 	}
 
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
+
 	void update(std::span<const float> audio_buffer) override
 	{
 		a.resize(fft_size);
@@ -44,5 +46,4 @@ struct RangedSpectrum : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(
-	RangedSpectrum, "Spectrum visualization with frequency range filtering (20-250 Hz)", 0.25f, viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN(RangedSpectrum, "Spectrum visualization with frequency range filtering (20-250 Hz)", 0.25f)

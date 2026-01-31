@@ -1,8 +1,11 @@
 #pragma once
 
+#include <format>
 #include <span>
+#include <string>
 #include <tk-spline.hpp>
 #include <vector>
+
 
 namespace avz
 {
@@ -25,6 +28,10 @@ private:
 	std::vector<double> m_spline_x, m_spline_y;
 	std::vector<size_t> zero_indices;
 	InterpolationType type{InterpolationType::CSPLINE};
+
+#ifdef LIBAVZ_IMGUI
+	std::string imgui_header{std::format("Interpolator @ {}", (void *)this)};
+#endif
 
 public:
 	/**

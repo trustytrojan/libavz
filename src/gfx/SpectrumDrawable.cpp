@@ -263,33 +263,33 @@ void SpectrumDrawable::update_bars()
 #ifdef LIBAVZ_IMGUI
 void avz::SpectrumDrawable::imgui()
 {
-	if (ImGui::CollapsingHeader("Spectrum"))
-	{
-		int bw = bar.width;
-		if (ImGui::SliderInt("Bar width", &bw, 1, 256))
-			set_bar_width(bw);
+	if (!ImGui::CollapsingHeader(imgui_header.c_str()))
+		return;
 
-		int spacing = bar.spacing;
-		if (ImGui::SliderInt("Bar spacing", &spacing, 0, 64))
-			set_bar_spacing(spacing);
+	int bw = bar.width;
+	if (ImGui::SliderInt("Bar width", &bw, 1, 256))
+		set_bar_width(bw);
 
-		float mult = multiplier;
-		if (ImGui::SliderFloat("Multiplier", &mult, 0.1f, 32.f, "%.2f"))
-			set_multiplier(mult);
+	int spacing = bar.spacing;
+	if (ImGui::SliderInt("Bar spacing", &spacing, 0, 64))
+		set_bar_spacing(spacing);
 
-		bool backwards_val = backwards;
-		if (ImGui::Checkbox("Backwards", &backwards_val))
-			set_backwards(backwards_val);
+	float mult = multiplier;
+	if (ImGui::SliderFloat("Multiplier", &mult, 0.1f, 32.f, "%.2f"))
+		set_multiplier(mult);
 
-		bool use_gs_val = use_gs;
-		if (ImGui::Checkbox("Use geometry shader", &use_gs_val))
-			set_use_gs(use_gs_val);
+	bool backwards_val = backwards;
+	if (ImGui::Checkbox("Backwards", &backwards_val))
+		set_backwards(backwards_val);
 
-		bool dbg = debug_rect;
-		if (ImGui::Checkbox("Show debug rect", &dbg))
-			set_debug_rect(dbg);
+	bool use_gs_val = use_gs;
+	if (ImGui::Checkbox("Use geometry shader", &use_gs_val))
+		set_use_gs(use_gs_val);
 
-		ImGui::Text("Bars: %d", bar.count);
-	}
+	bool dbg = debug_rect;
+	if (ImGui::Checkbox("Show debug rect", &dbg))
+		set_debug_rect(dbg);
+
+	ImGui::Text("Bars: %d", bar.count);
 }
 #endif

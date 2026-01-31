@@ -27,7 +27,7 @@ struct PolarSpectrum : ExampleBase
 			  (sf::Vector2f)size, // Dimensions of linear space
 			  size.y * 0.25f,	  // Base radius inner hole: 25% screen height
 			  size.y * 0.5f,	  // Max radius: 50% screen height
-			  M_PI / 2,		  // Angle start
+			  M_PI / 2,			  // Angle start
 			  2 * M_PI			  // Angle span
 		  }
 	{
@@ -38,6 +38,8 @@ struct PolarSpectrum : ExampleBase
 
 		emplace_layer<avz::Layer>("spectrum").add_draw({spectrum, &polar});
 	}
+
+	int get_audio_frames_needed() override { return fa.get_fft_size(); }
 
 	void update(std::span<const float> audio_buffer) override
 	{
@@ -53,4 +55,4 @@ struct PolarSpectrum : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN_CUSTOM(PolarSpectrum, "Polar spectrum visualization with bass frequencies", 0.15f, viz.fft_size)
+LIBAVZ_EXAMPLE_MAIN(PolarSpectrum, "Polar spectrum visualization with bass frequencies", 0.15f)
