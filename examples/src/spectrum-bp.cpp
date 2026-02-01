@@ -8,6 +8,22 @@
 
 using namespace avz::examples;
 
+/*
+Frequency spectrum visualizer example. Update logic/flow:
+
+1. read `fft_size` interleaved samples from the media source.
+   this is communicated via our override of the `get_audio_samples_needed()` method.
+2. extract the first channel of audio from the received chunk
+3. perform FFT on the extracted audio
+4. compute amplitudes from the FFT output
+5. use `BinPacker` to "pack" FFT amplitudes into (typically logarithmically) scaled
+   "bins" which correspond to the spectrum visualizer's bars
+6. use `Interpolator` to interpolate the gaps left behind by non-linear scaling
+7. finally, pass the data to our `SpectrumDrawable` for it to render
+
+This is the preferred (and faster) way to represent the full range of frequencies from the input audio.
+See `spectrum-sr.cpp` for a method that allows a customizable frequency range.
+*/
 struct SpectrumExample : ExampleBase
 {
 	// audio, spectrum
@@ -49,8 +65,7 @@ struct SpectrumExample : ExampleBase
 	int get_audio_frames_needed() override { return fa.get_fft_size(); }
 
 	/**
-	 * This is REQUIRED to implement. We have to update all of our objects
-	 * using the new audio
+	 * This is REQUIRED to implement. We have to update all of our objects using the new audio.
 	 */
 	void update(std::span<const float> audio_buffer) override
 	{

@@ -27,7 +27,7 @@ struct Polar : TransformEffect
 	 */
 	constexpr void enable_spectrum_gs(const SpectrumDrawable &spectrum)
 	{
-		spectrum_gs = true;
+		spectrum_gs_enabled = true;
 		spectrum_bar_width = spectrum.get_bar_width();
 		const auto rect = spectrum.get_rect();
 		spectrum_bottom_y = rect.position.y + rect.size.y;
@@ -36,10 +36,10 @@ struct Polar : TransformEffect
 	/**
 	 * Disable the spectrum geometry shader and use the normal vertex shader instead.
 	 */
-	constexpr void disable_spectrum_gs() { spectrum_gs = {}; }
+	constexpr void disable_spectrum_gs() { spectrum_gs_enabled = {}; }
 
 private:
-	bool spectrum_gs{};
+	bool spectrum_gs_enabled{};
 	float spectrum_bar_width;
 	float spectrum_bottom_y;
 };

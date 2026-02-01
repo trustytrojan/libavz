@@ -5,7 +5,7 @@
 #include <string>
 #include <string_view>
 
-static sf::Shader shader, shader_gs;
+static sf::Shader shader, spectrum_gs;
 
 static void init()
 {
@@ -18,7 +18,7 @@ static void init()
 
 static void init_gs()
 {
-	if (shader_gs.getNativeHandle())
+	if (spectrum_gs.getNativeHandle())
 		return;
 
 	// Pass-through vertex shader to satisfy the linker
@@ -26,7 +26,7 @@ static void init_gs()
 		vs_src = "#version 120\nvoid main() { gl_Position = gl_Vertex; gl_FrontColor = gl_Color; }",
 		fs_src = "#version 120\nvoid main() { gl_FragColor = gl_Color; }";
 
-	if (!shader_gs.loadFromMemory(vs_src, libavz_shader_spectrum_polar_geom, fs_src))
+	if (!spectrum_gs.loadFromMemory(vs_src, libavz_shader_spectrum_polar_geom, fs_src))
 		throw std::runtime_error{"failed to load spectrum_polar GS shader!"};
 }
 
@@ -45,10 +45,10 @@ Polar::Polar(sf::Vector2f size, float br, float mr, float angle_start, float ang
 
 const sf::Shader &Polar::getShader() const
 {
-	if (spectrum_gs)
+	if (spectrum_gs_enabled)
 	{
 		init_gs();
-		return shader_gs;
+		return spectrum_gs;
 	}
 	init();
 	return shader;
@@ -65,7 +65,7 @@ void Polar::setShaderUniforms() const
 	s.setUniform("angle_span", angle_span);
 	s.setUniform("warping_factor", warping_factor);
 
-	if (spectrum_gs)
+	if (spectrum_gs_enabled)
 	{
 		s.setUniform("bar_width", spectrum_bar_width);
 		s.setUniform("bottom_y", spectrum_bottom_y);

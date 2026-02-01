@@ -49,7 +49,7 @@ struct StereoPolarSpectrum : ExampleBase
 		{
 			spectrum.set_backwards(backwards);
 			a.resize(fft_size);
-			capture_time("strided_copy", avz::util::extract_channel(a, audio_buffer, num_channels, channel));
+			capture_time("extract_channel", avz::util::extract_channel(a, audio_buffer, num_channels, channel));
 			capture_time("fft", aa.execute_fft(fa, a));
 			capture_time("amplitudes", aa.compute_amplitudes(fa));
 			s.assign(spectrum.get_bar_count(), 0);

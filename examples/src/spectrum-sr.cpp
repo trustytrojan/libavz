@@ -8,6 +8,12 @@
 
 using namespace avz::examples;
 
+/*
+This example is visually equivalent to `spectrum-bp.cpp` with default configuration.
+However we use `SpectrumResampler` here instead of `BinPacker` to "resample" the FFT amplitudes to our `SpectrumDrawable`.
+This gives us the benefit of **choosing a frequency range to "zoom in" to**, at the cost of interpolating the value
+for every spectrum bar to be rendered. This causes our update time to be **3x** (on my machine) slower than in `spectrum-bp.cpp`.
+*/
 struct SpectrumResamplerExample : ExampleBase
 {
 	// audio, spectrum

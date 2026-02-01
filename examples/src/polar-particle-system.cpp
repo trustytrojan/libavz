@@ -47,7 +47,7 @@ struct PolarParticleSystem : ExampleBase
 		a.resize(fft_size);
 
 		// extract first channel of audio and perform FFT (needed in case media file has stereo audio)
-		capture_time("strided_copy", avz::util::extract_channel(a, audio_buffer, num_channels, 0));
+		capture_time("extract_channel", avz::util::extract_channel(a, audio_buffer, num_channels, 0));
 		capture_time("fft", aa.execute_fft(fa, a));
 
 		// compute amplitudes from FFT output
