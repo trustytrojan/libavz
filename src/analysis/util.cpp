@@ -14,12 +14,12 @@ void resample_spectrum(
 {
 	interpolator.set_values(in_amps);
 
-	const float bin_size = (float)sample_rate_hz / fft_size;
-	const float bin_pos_start = (start_freq / bin_size);
-	const float bin_pos_end = (end_freq / bin_size);
-	const float bin_pos_step = (bin_pos_end - bin_pos_start) / std::max(1.0f, (float)spectrum.size() - 1.0f);
+	const auto bin_size = (float)sample_rate_hz / fft_size;
+	const auto bin_pos_start = start_freq / bin_size;
+	const auto bin_pos_end = end_freq / bin_size;
+	const auto bin_pos_step = (bin_pos_end - bin_pos_start) / std::max(1.0f, (float)spectrum.size() - 1.0f);
 
-	float current_bin_pos = bin_pos_start;
+	auto current_bin_pos = bin_pos_start;
 	const auto out_size = spectrum.size();
 
 #pragma GCC ivdep

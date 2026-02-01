@@ -79,7 +79,7 @@ struct MirroredBassNation : ExampleBase
 		// Enable GS spectrum-bar expansion on the polar effect
 		if (args.get_geometry_shader_enabled())
 			// we can use any of them, since they all have the same bar_width and bottom_y
-			spectrum_polar.set_spectrum_gs(&spectrums[0]->spectrum);
+			spectrum_polar.enable_spectrum_gs(spectrums[0]->spectrum);
 
 		// Add mirror effect to create mirrored versions on the right side
 		spectrum_layer.add_effect(&mirror_l2r);

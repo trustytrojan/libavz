@@ -5,5 +5,6 @@
 #include <avz/analysis/FrequencyAnalyzer.hpp>
 #include <avz/analysis/Interpolator.hpp>
 #include <avz/analysis/MultiChannelAudioAnalyzer.hpp>
+#include <avz/analysis/SpectrumResampler.hpp>
 #include <avz/analysis/StereoAnalyzer.hpp>
 #include <avz/analysis/util.hpp>
