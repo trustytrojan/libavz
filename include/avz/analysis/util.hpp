@@ -18,7 +18,7 @@ constexpr int freq_from_bin_index(const int bin_index, const int sample_rate_hz,
 
 void extract_channel(std::span<float> out, std::span<const float> in, int num_channels, int channel);
 
-void resample_spectrum(
+void resample_spectrum_linear(
 	std::span<float> spectrum,
 	std::span<const float> in_amps,
 	int sample_rate_hz,

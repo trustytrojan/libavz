@@ -95,8 +95,7 @@ struct MirroredBassNation : ExampleBase
 		std::ranges::transform(
 			spectrums, futures.begin(), std::bind_back(&BassNationSpectrumLayer::trigger_work, audio_buffer));
 
-		// while the spectrums are updating, update our particle system
-		{
+		/*{ // while the spectrums are updating, update our particle system
 			// make sure we can fit one channel of audio
 			a.resize(fft_size);
 
@@ -115,7 +114,7 @@ struct MirroredBassNation : ExampleBase
 			float max;
 			capture_time("bn_calc", max = bass_nation_additional_displacement(bass_amps));
 			capture_time("ps_update", ps.update(bass_nation_additional_displacement(bass_amps)));
-		}
+		}*/
 
 		// wait for all spectrums to finish updating
 		std::ranges::for_each(futures, &std::future<void>::wait);

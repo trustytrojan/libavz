@@ -3,7 +3,7 @@
 namespace avz::util
 {
 
-void resample_spectrum(
+void resample_spectrum_linear(
 	std::span<float> spectrum,
 	std::span<const float> in_amps,
 	int sample_rate_hz,

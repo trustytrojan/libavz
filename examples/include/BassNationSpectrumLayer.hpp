@@ -1,6 +1,5 @@
 #pragma once
 
-#include "avz/gfx/ColorSettings.hpp"
 #include <avz/analysis.hpp>
 #include <avz/gfx.hpp>
 #include <avz/media.hpp>
@@ -18,6 +17,7 @@ struct BassNationSpectrumLayer
 	avz::FrequencyAnalyzer fa;
 	avz::AudioAnalyzer aa;
 	avz::Interpolator ip;
+	avz::SpectrumResampler sr;
 	std::vector<float> s, a;
 	avz::ColorSettings cs;
 	avz::SpectrumDrawable spectrum;

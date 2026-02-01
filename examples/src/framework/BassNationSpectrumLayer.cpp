@@ -39,7 +39,8 @@ void BassNationSpectrumLayer::compute(std::span<const float> audio_buffer)
 	aa.execute_fft(fa, a);
 	aa.compute_amplitudes(fa);
 	const auto amps = aa.get_amplitudes();
-	avz::util::resample_spectrum(s, amps, sample_rate, fa.get_fft_size(), 20.0f, 135.0f, ip);
+	// avz::util::resample_spectrum(s, amps, sample_rate, fa.get_fft_size(), 20.0f, 135.0f, ip);
+	sr.resample_spectrum(s, amps, sample_rate, fa.get_fft_size(), ip);
 	spectrum.update(s);
 }
 
@@ -64,6 +65,8 @@ void BassNationSpectrumLayer::configure_spectrum(bool prev, sf::Vector2u size)
 	spectrum.set_multiplier(6);
 	spectrum.set_backwards(prev);
 	s.resize(spectrum.get_bar_count());
+	sr.set_frequency_range(20, 135);
+	sr.set_scale(SpectrumResampler::Scale::LINEAR);
 }
 
 void BassNationSpectrumLayer::worker_loop()

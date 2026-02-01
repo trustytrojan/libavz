@@ -41,7 +41,7 @@ struct RangedSpectrum : ExampleBase
 		s.assign(spectrum.get_bar_count(), 0);
 		capture_time(
 			"resample_spectrum",
-			avz::util::resample_spectrum(s, aa.get_amplitudes(), sample_rate_hz, fft_size, 20, 250, ip));
+			avz::util::resample_spectrum_linear(s, aa.get_amplitudes(), sample_rate_hz, fft_size, 20, 250, ip));
 		capture_time("spectrum_update", spectrum.update(s));
 	}
 };

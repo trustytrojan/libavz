@@ -82,4 +82,7 @@ struct SpectrumResamplerExample : ExampleBase
 	}
 };
 
-LIBAVZ_EXAMPLE_MAIN(SpectrumResamplerExample, "Spectrum visualization with logarithmic frequency scaling", 0.1f)
+LIBAVZ_EXAMPLE_MAIN(
+	SpectrumResamplerExample,
+	"Spectrum visualization with logarithmic frequency scaling and customizable frequency range",
+	0.1f)

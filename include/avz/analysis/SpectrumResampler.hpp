@@ -1,12 +1,10 @@
 #pragma once
 
 #include <avz/analysis/Interpolator.hpp>
-#include <cmath>
 #include <format>
 #include <span>
 #include <string>
 #include <vector>
-
 
 namespace avz
 {
@@ -14,7 +12,7 @@ namespace avz
 /**
  * Resamples frequency spectrum data with configurable frequency scaling (linear, logarithmic, nth-root).
  * Maintains state for efficient recomputation when parameters change infrequently.
- * 
+ *
  * This class provides smooth, gap-free spectrum resampling by combining interpolation with
  * arbitrary frequency scale mappings. Unlike BinPacker which creates discrete bins with gaps,
  * SpectrumResampler produces uniform, smooth curves by sampling the interpolated spectrum
@@ -25,14 +23,14 @@ class SpectrumResampler
 public:
 	enum class Scale
 	{
-		LINEAR,   ///< Linear frequency spacing
-		LOG,      ///< Logarithmic frequency spacing (perceptually uniform)
-		NTH_ROOT  ///< Nth-root frequency spacing (configurable via set_nth_root)
+		LINEAR,	 ///< Linear frequency spacing
+		LOG,	 ///< Logarithmic frequency spacing (perceptually uniform)
+		NTH_ROOT ///< Nth-root frequency spacing (configurable via set_nth_root)
 	};
 
 private:
 	// Configuration
-	Scale scale{Scale::LOG};
+	Scale scale{Scale::LINEAR};
 	int start_freq{20};
 	int end_freq{20000};
 	int nth_root{2};
@@ -51,7 +49,7 @@ private:
 	int cached_sample_rate{-1};
 	int cached_fft_size{-1};
 	int cached_output_size{-1};
-	std::vector<float> bin_positions;  ///< Pre-calculated bin positions for current config
+	std::vector<float> bin_positions; ///< Pre-calculated bin positions for current config
 
 #ifdef LIBAVZ_IMGUI
 	std::string imgui_header{std::format("SpectrumResampler @ {}", (void *)this)};
@@ -104,7 +102,7 @@ public:
 	 * Resample spectrum from input FFT amplitudes using configured scale and frequency range.
 	 * Produces smooth, gap-free output by interpolating between input bins at precisely
 	 * calculated frequency positions according to the selected scale.
-	 * 
+	 *
 	 * @param spectrum output spectrum buffer (determines output size)
 	 * @param in_amps input FFT amplitudes (from AudioAnalyzer)
 	 * @param sample_rate_hz sample rate in Hz
