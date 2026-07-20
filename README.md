@@ -1,5 +1,7 @@
 # libavz
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/blocksds/sdk)
+
 _my own audio visualizer library, because after effects sucks_
 
 [here](https://youtube.com/playlist?list=PLq63g2iq0LVvxNjjoYOL4GMTOdXEdHsBf) are
