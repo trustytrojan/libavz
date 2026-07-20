@@ -1,6 +1,6 @@
 # libavz
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/blocksds/sdk)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/trustytrojan/libavz)
 
 _my own audio visualizer library, because after effects sucks_
 
